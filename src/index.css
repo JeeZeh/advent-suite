@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Berkeley Mono Regular";
+  font-weight: 500;
+  src: url("./assets/fonts/BerkeleyMono-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Berkeley Mono Bol";
+  font-weight: 700;
+  src: url("./assets/fonts/BerkeleyMono-Bold.woff2") format("woff2");
+}
