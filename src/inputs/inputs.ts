@@ -1,8 +1,16 @@
 import i2021_01_ex from "./2021/01/example";
+import i2021_01_real from "./2021/01/real";
+
+export type Answer = {
+  partOne?: string;
+  partTwo?: string;
+};
 
 export type ProblemInput = {
   name: string;
   data: string;
+  isReal?: boolean;
+  expected: Answer;
 };
 
 export const INPUT_INDEX: {
@@ -11,8 +19,29 @@ export const INPUT_INDEX: {
   "2021": {
     "01": [
       {
-        name: "Example",
+        name: "Example 1",
         data: i2021_01_ex,
+        expected: {
+          partOne: "7",
+          partTwo: "5",
+        },
+      },
+      {
+        name: "Example with Bad Answer",
+        data: i2021_01_ex,
+        expected: {
+          partOne: "4",
+          partTwo: "5",
+        },
+      },
+      {
+        name: "Real Input",
+        data: i2021_01_real,
+        isReal: true,
+        expected: {
+          partOne: "1564",
+          partTwo: "1611",
+        },
       },
     ],
   },

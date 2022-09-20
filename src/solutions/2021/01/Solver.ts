@@ -15,7 +15,7 @@ function partTwo(measurements: number[]): number {
   let count = 0;
   let last = measurements.slice(0, 3).reduce((a, b) => a + b, 0);
 
-  for (let i = 3; i < measurements.length - 3; i++) {
+  for (let i = 0; i < measurements.length - 2; i++) {
     let sum = measurements.slice(i, i + 3).reduce((a, b) => a + b, 0);
     if (sum > last) {
       count++;
