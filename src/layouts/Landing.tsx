@@ -2,6 +2,7 @@ import { Button, Label, Select, Spinner, Textarea } from "flowbite-react";
 import React, {
   ChangeEvent,
   FC,
+  ReactElement,
   ReactNode,
   useCallback,
   useEffect,
@@ -17,6 +18,7 @@ import {
   ProblemInput,
 } from "../inputs/inputs";
 import { ResultDisplay } from "../components/ResultDisplay";
+import { InputDisplay } from "../components/InputDisplay";
 
 export type RunResult = {
   answer: Answer;
@@ -140,11 +142,7 @@ function Landing() {
             </div>
           </div>
           <ResultDisplay isRunning={isRunning} toDisplay={runResult} />
-          <Textarea
-            value={problemInput?.data ?? ""}
-            style={{ minHeight: "16em", fontFamily: "Berkeley Mono Regular" }}
-            readOnly
-          />
+          <InputDisplay problemInput={problemInput} />
         </div>
       </div>
     </div>
