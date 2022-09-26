@@ -1,6 +1,8 @@
 import { DarkThemeToggle, Label, Select } from "flowbite-react";
 import React from "react";
 
+import * as cs from "classnames";
+
 interface IHeaderProps {
   year?: string;
   yearOptions: string[];
@@ -13,15 +15,37 @@ interface IHeaderProps {
 export function Header(props: IHeaderProps): JSX.Element {
   const { setYear, yearOptions, setDay, dayOptions } = props;
   return (
-    <div className="flex flex-row items-center justify-between w-full max-w-4xl mt-4 shadow-lg py-6 px-10 rounded-lg bg-slate-50 dark:bg-slate-800 dark:text-slate-50">
+    <div
+      className={cs(
+        "flex",
+        "flex-row",
+        "items-center",
+        "justify-between",
+        "w-full",
+        "max-w-4xl",
+        "mt-4",
+        "shadow-lg",
+        "py-6",
+        "px-10",
+        "rounded-lg",
+        "bg-slate-50",
+        "dark:bg-slate-800",
+        "text-blue-900",
+        "dark:text-orange-50"
+      )}
+    >
       <div>
-        <div className="flex flex-row space-x-2">
-          <p className="text-4xl font-bold font-mono">Advent of Code</p>
+        <div className={cs("flex", "flex-row", "space-x-2")}>
+          <p className={cs("text-4xl", "font-bold", "font-mono")}>
+            Advent of Code
+          </p>
           <DarkThemeToggle />
         </div>
-        <p className="text-base font-normal font opacity-75"> suite</p>
+        <p className={cs("text-base", "font-normal", "font", "opacity-75")}>
+          suite
+        </p>
       </div>
-      <div className="flex flex-col space-y-2 items-start">
+      <div className={cs("flex", "flex-col", "space-y-2", "items-start")}>
         <div>
           <Label>Year</Label>
           <Select

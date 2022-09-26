@@ -1,14 +1,13 @@
-import { Button, Label, Select, Spinner, Textarea } from "flowbite-react";
-import React, {
-  ChangeEvent,
-  FC,
-  ReactElement,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import {
+  Badge,
+  Button,
+  Label,
+  ListGroup,
+  Select,
+  Spinner,
+  Textarea,
+} from "flowbite-react";
+import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { Header } from "../components/Header";
 import {
   Answer,
@@ -19,8 +18,20 @@ import {
 } from "../inputs/inputs";
 import { ResultDisplay } from "../components/ResultDisplay";
 import { InputDisplay } from "../components/InputDisplay";
+import * as cs from "classnames";
+import {
+  ListGroupItem,
+  ListGroupItemProps,
+} from "flowbite-react/lib/esm/components/ListGroup/ListGroupItem";
+import {
+  CheckBadgeIcon,
+  CheckCircleIcon,
+  EllipsisHorizontalCircleIcon,
+  EllipsisHorizontalIcon,
+} from "@heroicons/react/24/solid";
 
 export type RunResult = {
+  problemInput: ProblemInput;
   answer: Answer;
   runtimeMs: number;
 };
@@ -41,6 +52,7 @@ async function runSolution(
   const runtimeMs = window.performance.now() - start;
 
   return {
+    problemInput: input,
     answer: { partOne, partTwo },
     runtimeMs,
   };
@@ -77,16 +89,31 @@ function Landing() {
     setIsRunning(false);
   }, [year, day, problemInput]);
 
-  function changeProblemInput(e: ChangeEvent<HTMLSelectElement>) {
-    const input = problemInputs.find((x) => x.name == e.target.value);
+  function changeProblemInput(name: string) {
+    const input = problemInputs.find((x) => x.name == name);
     if (input) {
       setProblemInput(input);
     }
   }
 
   return (
-    <div className="font-sans bg-slate-100 dark:bg-slate-900 min-h-screen">
-      <div className="grid max-w-4xl grid-flow-row place-items-center m-auto">
+    <div
+      className={cs(
+        "font-sans",
+        "bg-slate-100",
+        "dark:bg-slate-900",
+        "min-h-screen"
+      )}
+    >
+      <div
+        className={cs(
+          "grid",
+          "max-w-4xl",
+          "grid-flow-row",
+          "place-items-center",
+          "m-auto"
+        )}
+      >
         <Header
           year={year}
           yearOptions={yearOptions}
@@ -95,54 +122,107 @@ function Landing() {
           dayOptions={dayOptions}
           setDay={setDay}
         />
-        <div className="flex flex-col items-center space-y-3 mt-10 w-10/12">
-          <div className="flex space-x-4 items-end justify-center ">
-            <div>
-              <Label>Input</Label>
-              <Select
-                title="Input"
-                sizing="base"
-                shadow
-                onChange={changeProblemInput}
-              >
-                {problemInputs.map((i) => (
-                  <option key={`option-${i.name}`} value={i.name}>
-                    {i.name}
-                  </option>
-                ))}
-              </Select>
+        <div
+          className={cs(
+            "flex",
+            "flex-col",
+            "items-center",
+            "space-y-3",
+            "mt-10",
+            "w-full"
+          )}
+        >
+          <ResultDisplay isRunning={isRunning} toDisplay={runResult} />
+          <div className={cs("flex flex-row gap-2 w-full")}>
+            <div
+              className={cs(
+                "w-full",
+                "h-64",
+                "resize-y",
+                "bg-slate-50",
+                "dark:bg-slate-800",
+                "dark:text-slate-100",
+                "rounded-md",
+                "font-mono",
+                "shadow-md",
+                "border-gray-300",
+                "dark:border-gray-600",
+                "border",
+                "flex",
+                "flex-row",
+                "col-span-1",
+                "overflow-y-auto"
+              )}
+            >
+              <InputDisplay problemInput={problemInput} />
             </div>
-            <div className="flex space-x-1">
-              <Button
-                color={isRunning ? "info" : "success"}
-                onClick={runSolutionWithSelectedInput}
-              >
-                {isRunning ? (
-                  <>
-                    <Spinner size="sm" aria-label="Spinner button example" />
-                    <span className="pl-3">Running...</span>
-                  </>
-                ) : (
-                  "Run"
+            <div className={cs("flex", "flex-col", "gap-2", "w-96")}>
+              <div
+                className={cs(
+                  "flex",
+                  "space-x-4",
+                  "items-end",
+                  "justify-between"
                 )}
-              </Button>
-              {/* <Button
-                color={isRunning ? "info" : "light"}
-                onClick={runSolutionWithSelectedInput}
               >
-                {isRunning ? (
-                  <>
-                    <Spinner size="sm" aria-label="Spinner button example" />
-                    <span className="pl-3">Running...</span>
-                  </>
-                ) : (
-                  "Run all"
-                )}
-              </Button> */}
+                <div className={cs("flex", "space-x-2")}>
+                  <Button
+                    color={isRunning ? "info" : "success"}
+                    onClick={runSolutionWithSelectedInput}
+                  >
+                    {isRunning ? (
+                      <>
+                        <Spinner
+                          size="sm"
+                          aria-label="Spinner button example"
+                        />
+                        <span className={cs("pl-3")}>Running...</span>
+                      </>
+                    ) : (
+                      "Run"
+                    )}
+                  </Button>
+                  <Button
+                    color={isRunning ? "info" : "light"}
+                    onClick={runSolutionWithSelectedInput}
+                  >
+                    {isRunning ? (
+                      <>
+                        <Spinner
+                          size="sm"
+                          aria-label="Spinner button example"
+                        />
+                        <span className="pl-3">Running...</span>
+                      </>
+                    ) : (
+                      "Run all"
+                    )}
+                  </Button>
+                </div>
+              </div>
+              <ListGroup>
+                {problemInputs.map((p) => (
+                  <ListGroupItem
+                    key={`option-${p.name}`}
+                    active={problemInput?.name == p.name}
+                    onClick={() => changeProblemInput(p.name)}
+                  >
+                    <div className={cs("flex", "space-x-2", "items-center", "justify-center")}>
+                      <div className={cs("w-6")}>
+                        {runResult?.answer &&
+                        runResult.problemInput.name == p.name ? (
+                          <CheckBadgeIcon />
+                        ) : (
+                          <EllipsisHorizontalCircleIcon />
+                        )}
+                      </div>
+                      <div>{p.name}</div>
+                    </div>
+                  </ListGroupItem>
+                ))}
+              </ListGroup>
             </div>
           </div>
-          <ResultDisplay isRunning={isRunning} toDisplay={runResult} />
-          <InputDisplay problemInput={problemInput} />
         </div>
       </div>
     </div>
