@@ -26,9 +26,9 @@ function partTwo(measurements: number[]): number {
   return count;
 }
 
-export default async function solution(input?: string): Promise<any[]> {
+export default async function solution(input?: string): Promise<string[]> {
   if (!input) throw Error("Invalid input");
 
   const measurements: number[] = input.split("\n").map((l) => parseInt(l));
-  return [partOne(measurements), partTwo(measurements)];
+  return [`${partOne(measurements)}`, `${partTwo(measurements)}`];
 }

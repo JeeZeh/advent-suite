@@ -1,3 +1,4 @@
+import { RunResult } from "../layouts/Landing";
 import i2021_01_ex from "./2021/01/example";
 import i2021_01_real from "./2021/01/real";
 
@@ -62,4 +63,33 @@ export function getProblemInputs(
   if (!year || !day) return [];
 
   return (INPUT_INDEX[year] ?? {})[day] ?? [];
+}
+
+export enum AnswerEval {
+  Correct,
+  Incorrect,
+  Incomplete,
+}
+
+export function evaluateRunResult(
+  expected: Answer,
+  result: Answer
+): [AnswerEval, AnswerEval] {
+  const answers = [AnswerEval.Incomplete, AnswerEval.Incomplete];
+
+  if (expected.partOne && result.partOne) {
+    answers[0] =
+      expected.partOne === result.partOne
+        ? AnswerEval.Correct
+        : AnswerEval.Incorrect;
+  }
+
+  if (expected.partTwo && result.partTwo) {
+    answers[1] =
+      expected.partTwo === result.partTwo
+        ? AnswerEval.Correct
+        : AnswerEval.Incorrect;
+  }
+
+  return [answers[0], answers[1]];
 }

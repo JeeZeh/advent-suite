@@ -11,13 +11,15 @@ import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { Header } from "../components/Header";
 import {
   Answer,
+  AnswerEval,
+  evaluateRunResult,
   getDayOptions,
   getProblemInputs,
   getYearOptions,
   ProblemInput,
 } from "../inputs/inputs";
 import { ResultDisplay } from "../components/ResultDisplay";
-import { InputDisplay } from "../components/InputDisplay";
+import { InputDisplay } from "../components/EnumeratedTextDisplay";
 import * as cs from "classnames";
 import {
   ListGroupItem,
@@ -28,17 +30,31 @@ import {
   CheckCircleIcon,
   EllipsisHorizontalCircleIcon,
   EllipsisHorizontalIcon,
+  QuestionMarkCircleIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/solid";
 
 export type RunResult = {
   problemInput: ProblemInput;
   answer: Answer;
   runtimeMs: number;
+  evaluation: [AnswerEval, AnswerEval];
 };
 
 type SolverModule = {
   default: (input?: string) => Promise<any[]>;
 };
+
+/**
+ * Dynamically imports the solver for this year and day, and runs the provided ProblemInput against it,
+ * returning the result as a promise which resolves once the solution has run.
+ *
+ * @param year Solution year
+ * @param day Solution day
+ * @param input ProblemInput to be passed to the SolverModule
+ * @returns A promise returning the RunResult of the imported SolverModule
+ * running the given input, resolving when the solution is finished running.
+ */
 async function runSolution(
   year: string,
   day: string,
@@ -50,52 +66,78 @@ async function runSolution(
   const start = window.performance.now();
   const [partOne, partTwo] = await module.default(input.data);
   const runtimeMs = window.performance.now() - start;
-
+  const answer = { partOne, partTwo };
   return {
     problemInput: input,
-    answer: { partOne, partTwo },
+    answer,
     runtimeMs,
+    evaluation: evaluateRunResult(answer, input.expected),
   };
+}
+
+interface ResultIconProps {
+  result?: RunResult;
+}
+/**
+ * Determine and return which icon to display for the RunResult evaluation.
+ * @returns An SVG with the icon corresponding to the input evaluation result.
+ */
+function ResultIcon({ result }: ResultIconProps) {
+  if (result == null) {
+    return <EllipsisHorizontalCircleIcon />;
+  }
+
+  const { evaluation } = result;
+
+  // Everything is correct
+  if (evaluation.every((e) => e == AnswerEval.Correct)) {
+    return <CheckCircleIcon />;
+  }
+
+  // Nothing is Incorrect, but not everything is Correct (some Incomplete)
+  if (evaluation.every((e) => e !== AnswerEval.Incorrect)) {
+    return <QuestionMarkCircleIcon />;
+  }
+
+  return <XCircleIcon />;
 }
 
 function Landing() {
   const [year, setYear] = useState<string>(getYearOptions()[0]);
   const [day, setDay] = useState<string>(getDayOptions(year)[0]);
-  const [problemInput, setProblemInput] = useState<ProblemInput>(
-    getProblemInputs(year, day)[0]
-  );
+  const [selectedProblemInput, setSelectedProblemInput] =
+    useState<ProblemInput>(getProblemInputs(year, day)[0]);
   const [isRunning, setIsRunning] = useState(false);
-  const [runResult, setRunResult] = useState<RunResult>();
+  const [runResults, setRunResults] = useState<Map<string, RunResult>>(
+    new Map()
+  );
 
   const yearOptions = useMemo(() => getYearOptions(), []);
   const dayOptions = useMemo(() => getDayOptions(year), [year]);
   const problemInputs = useMemo(() => getProblemInputs(year, day), [year, day]);
 
-  const runSolutionWithSelectedInput = useCallback(async () => {
-    const showSpinnerAfter = setTimeout(() => setIsRunning(true), 1000);
-    setRunResult(await runSolution(year, day, problemInput));
-    clearTimeout(showSpinnerAfter);
-    setIsRunning(false);
-  }, [year, day, problemInput]);
+  const runProblemInputs = useCallback(
+    async (problemInputs: ProblemInput[]) => {
+      console.log(problemInputs);
+      const showSpinnerAfter = setTimeout(() => setIsRunning(true), 1000);
+      const results = await Promise.all(
+        problemInputs.map(async (p) => await runSolution(year, day, p))
+      );
 
-  const runSolutionWithAllInputs = useCallback(async () => {
-    const showSpinnerAfter = setTimeout(() => setIsRunning(true), 1000);
-    // Run result should be an array that maps back to the example inputs
-    // Maybe split this into a different view, a wrapper over ResultDisplay with tabs?
-    // Consider including in the result the time taken to run in addition to the answer
-    // Could also include the whether or not each part matches the expected output
-    // setRunResult(await dynRunSolution(year, day, problemInput.data));
-    clearTimeout(showSpinnerAfter);
-    setIsRunning(false);
-  }, [year, day, problemInput]);
+      setRunResults((currentResults) => {
+        for (const result of results) {
+          currentResults.set(result.problemInput.name, result);
+        }
+        return new Map(currentResults);
+      });
 
-  function changeProblemInput(name: string) {
-    const input = problemInputs.find((x) => x.name == name);
-    if (input) {
-      setProblemInput(input);
-    }
-  }
+      clearTimeout(showSpinnerAfter);
+      setIsRunning(false);
+    },
+    [year, day]
+  );
 
+  // TODO: Refactor this render into smaller components
   return (
     <div
       className={cs(
@@ -132,7 +174,29 @@ function Landing() {
             "w-full"
           )}
         >
-          <ResultDisplay isRunning={isRunning} toDisplay={runResult} />
+          <div
+            className={cs(
+              "w-full",
+              "h-full",
+              "bg-slate-50",
+              "dark:bg-slate-800",
+              "dark:text-slate-100",
+              "rounded-md",
+              "font-mono",
+              "shadow-md",
+              "border-gray-300",
+              "dark:border-gray-600",
+              "border",
+              "flex",
+              "flex-row",
+              "col-span-1"
+            )}
+          >
+            <ResultDisplay
+              isRunning={isRunning}
+              toDisplay={runResults.get(selectedProblemInput.name)}
+            />
+          </div>
           <div className={cs("flex flex-row gap-2 w-full")}>
             <div
               className={cs(
@@ -154,7 +218,7 @@ function Landing() {
                 "overflow-y-auto"
               )}
             >
-              <InputDisplay problemInput={problemInput} />
+              <InputDisplay data={selectedProblemInput.data} />
             </div>
             <div className={cs("flex", "flex-col", "gap-2", "w-96")}>
               <div
@@ -168,7 +232,7 @@ function Landing() {
                 <div className={cs("flex", "space-x-2")}>
                   <Button
                     color={isRunning ? "info" : "success"}
-                    onClick={runSolutionWithSelectedInput}
+                    onClick={() => runProblemInputs([selectedProblemInput])}
                   >
                     {isRunning ? (
                       <>
@@ -184,7 +248,7 @@ function Landing() {
                   </Button>
                   <Button
                     color={isRunning ? "info" : "light"}
-                    onClick={runSolutionWithSelectedInput}
+                    onClick={() => runProblemInputs(problemInputs)}
                   >
                     {isRunning ? (
                       <>
@@ -204,17 +268,19 @@ function Landing() {
                 {problemInputs.map((p) => (
                   <ListGroupItem
                     key={`option-${p.name}`}
-                    active={problemInput?.name == p.name}
-                    onClick={() => changeProblemInput(p.name)}
+                    active={selectedProblemInput?.name == p.name}
+                    onClick={() => setSelectedProblemInput(p)}
                   >
-                    <div className={cs("flex", "space-x-2", "items-center", "justify-center")}>
+                    <div
+                      className={cs(
+                        "flex",
+                        "space-x-2",
+                        "items-center",
+                        "justify-center"
+                      )}
+                    >
                       <div className={cs("w-6")}>
-                        {runResult?.answer &&
-                        runResult.problemInput.name == p.name ? (
-                          <CheckBadgeIcon />
-                        ) : (
-                          <EllipsisHorizontalCircleIcon />
-                        )}
+                        <ResultIcon result={runResults.get(p.name)} />
                       </div>
                       <div>{p.name}</div>
                     </div>

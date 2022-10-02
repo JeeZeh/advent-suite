@@ -1,13 +1,17 @@
 import { Spinner, Textarea } from "flowbite-react";
-import React from "react";
-import { Answer } from "../inputs/inputs";
 import { RunResult } from "../layouts/Landing";
+import { InputDisplay } from "./EnumeratedTextDisplay";
 
 interface ResultDisplayProps {
   isRunning: boolean;
   toDisplay?: RunResult;
 }
-function formatAnswer({ answer, runtimeMs }: RunResult): string {
+function formatResult(result?: RunResult): string | undefined {
+  if (!result) {
+    return;
+  }
+
+  const { answer, runtimeMs } = result;
   return `Part 1: ${answer.partOne}\nPart 2: ${
     answer.partTwo
   }\nRuntime: ${runtimeMs.toPrecision(4)}ms`;
@@ -19,14 +23,6 @@ export function ResultDisplay({
   if (isRunning) {
     return <Spinner />;
   }
-  if (!result) {
-    return null;
-  }
-  return (
-    <Textarea
-      style={{ minHeight: "6em", resize: "none", fontFamily: "Berkeley Mono Regular" }}
-      value={formatAnswer(result)}
-      readOnly
-    ></Textarea>
-  );
+
+  return <InputDisplay data={formatResult(result)}></InputDisplay>;
 }

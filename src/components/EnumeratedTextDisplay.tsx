@@ -1,24 +1,30 @@
 import React, { useMemo } from "react";
-import { ProblemInput } from "../inputs/inputs";
-
 import * as cs from "classnames";
 
 interface InputDisplayProps {
-  problemInput?: ProblemInput;
+  data?: string;
 }
-export function InputDisplay({
-  problemInput,
-}: InputDisplayProps): React.ReactElement {
-  if (!problemInput || !problemInput.data) {
-    return <>No input data!</>;
+export function InputDisplay({ data }: InputDisplayProps): React.ReactElement {
+  if (!data) {
+    return (
+      <div
+        className={cs(
+          "flex",
+          "justify-center",
+          "items-center",
+          "w-full",
+          "h-full",
+          "opacity-75"
+        )}
+      >
+        <p>No text to display</p>
+      </div>
+    );
   }
 
-  const linePaddingSize = useMemo(
-    () => problemInput.data.length.toString().length,
-    [problemInput]
-  );
+  const linePaddingSize = useMemo(() => data.length.toString().length, [data]);
 
-  const lines = useMemo(() => problemInput.data.split("\n"), [problemInput]);
+  const lines = useMemo(() => data.split("\n"), [data]);
 
   return (
     <>
