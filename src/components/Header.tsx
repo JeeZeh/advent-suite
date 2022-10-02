@@ -37,13 +37,11 @@ export function Header(props: IHeaderProps): JSX.Element {
       <div>
         <div className={cs("flex", "flex-row", "space-x-2")}>
           <p className={cs("text-4xl", "font-bold", "font-mono")}>
-            Advent of Code
+            Advent<span className={cs("text-2xl","opacity-80", "pl-1")}>suite</span>
           </p>
           <DarkThemeToggle />
         </div>
-        <p className={cs("text-base", "font-normal", "font", "opacity-75")}>
-          suite
-        </p>
+
       </div>
       <div className={cs("flex", "flex-col", "space-y-2", "items-start")}>
         <div>
