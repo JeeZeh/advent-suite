@@ -14,6 +14,7 @@ export function InputDisplay({ data }: InputDisplayProps): React.ReactElement {
           "items-center",
           "w-full",
           "h-full",
+          "p-5",
           "opacity-75"
         )}
       >
