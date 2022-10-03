@@ -43,7 +43,7 @@ export function Header(props: IHeaderProps): JSX.Element {
         </div>
 
       </div>
-      <div className={cs("flex", "flex-col", "space-y-2", "items-start")}>
+      <div className={cs("flex", "flex-row", "gap-2", "items-start")}>
         <div>
           <Label>Year</Label>
           <Select
