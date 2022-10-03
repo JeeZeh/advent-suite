@@ -33,6 +33,7 @@ import {
   QuestionMarkCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid";
+import { ResultIcon } from "../components/ResultIcon";
 
 export type RunResult = {
   problemInput: ProblemInput;
@@ -73,33 +74,6 @@ async function runSolution(
     runtimeMs,
     evaluation: evaluateRunResult(answer, input.expected),
   };
-}
-
-interface ResultIconProps {
-  result?: RunResult;
-}
-/**
- * Determine and return which icon to display for the RunResult evaluation.
- * @returns An SVG with the icon corresponding to the input evaluation result.
- */
-function ResultIcon({ result }: ResultIconProps) {
-  if (result == null) {
-    return <EllipsisHorizontalCircleIcon />;
-  }
-
-  const { evaluation } = result;
-
-  // Everything is correct
-  if (evaluation.every((e) => e == AnswerEval.Correct)) {
-    return <CheckCircleIcon />;
-  }
-
-  // Nothing is Incorrect, but not everything is Correct (some Incomplete)
-  if (evaluation.every((e) => e !== AnswerEval.Incorrect)) {
-    return <QuestionMarkCircleIcon />;
-  }
-
-  return <XCircleIcon />;
 }
 
 function Landing() {
@@ -174,50 +148,11 @@ function Landing() {
             "w-full"
           )}
         >
-          <div
-            className={cs(
-              "w-full",
-              "h-full",
-              "bg-slate-50",
-              "dark:bg-slate-800",
-              "dark:text-slate-100",
-              "rounded-md",
-              "font-mono",
-              "border-gray-300",
-              "dark:border-gray-600",
-              "border",
-              "flex",
-              "flex-row",
-              "col-span-1"
-            )}
-          >
+          <div className={cs("flex flex-row gap-2 w-full")}>
             <ResultDisplay
               isRunning={isRunning}
-              toDisplay={runResults.get(selectedProblemInput.name)}
+              result={runResults.get(selectedProblemInput.name)}
             />
-          </div>
-          <div className={cs("flex flex-row gap-2 w-full")}>
-            <div
-              className={cs(
-                "w-full",
-                "h-64",
-                "resize-y",
-                "bg-slate-50",
-                "dark:bg-slate-800",
-                "dark:text-slate-100",
-                "rounded-md",
-                "font-mono",
-                "border-gray-300",
-                "dark:border-gray-600",
-                "border",
-                "flex",
-                "flex-row",
-                "col-span-1",
-                "overflow-y-auto"
-              )}
-            >
-              <InputDisplay data={selectedProblemInput.data} />
-            </div>
             <div className={cs("flex", "flex-col", "gap-2", "w-96")}>
               <div
                 className={cs(
@@ -278,7 +213,9 @@ function Landing() {
                       )}
                     >
                       <div className={cs("w-6")}>
-                        <ResultIcon result={runResults.get(p.name)} />
+                        <ResultIcon
+                          evaluations={runResults.get(p.name)?.evaluation}
+                        />
                       </div>
                       <div>{p.name}</div>
                     </div>
@@ -286,6 +223,27 @@ function Landing() {
                 ))}
               </ListGroup>
             </div>
+          </div>
+          <div
+            className={cs(
+              "w-full",
+              "h-64",
+              "resize-y",
+              "bg-slate-50",
+              "dark:bg-slate-800",
+              "dark:text-slate-100",
+              "rounded-md",
+              "font-mono",
+              "border-gray-300",
+              "dark:border-gray-600",
+              "border",
+              "flex",
+              "flex-row",
+              "col-span-1",
+              "overflow-y-auto"
+            )}
+          >
+            <InputDisplay data={selectedProblemInput.data} />
           </div>
         </div>
       </div>

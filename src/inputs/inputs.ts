@@ -11,7 +11,7 @@ export type ProblemInput = {
   name: string;
   data: string;
   isReal?: boolean;
-  expected: Answer;
+  expected: Required<Answer>;
 };
 
 export const INPUT_INDEX: {
