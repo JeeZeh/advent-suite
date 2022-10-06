@@ -28,7 +28,15 @@ export function InputDisplay({ data }: InputDisplayProps): React.ReactElement {
   const lines = useMemo(() => data.split("\n"), [data]);
 
   return (
-    <>
+    <div
+      className={cs(
+        "flex",
+        "flex-row",
+        "font-mono",
+        "h-min",
+        "min-h-full",
+      )}
+    >
       {/* Left-hand gutter with line numbers  */}
       {/* Required 'height: min-content; min-height: 100%' for resizable + scrollable bg to always be visible */}
       <div
@@ -46,8 +54,6 @@ export function InputDisplay({ data }: InputDisplayProps): React.ReactElement {
           "text-gray-500",
           "dark:bg-gray-700",
           "dark:text-gray-400",
-          "h-min",
-          "min-h-full"
         )}
       >
         {lines.map(
@@ -58,6 +64,6 @@ export function InputDisplay({ data }: InputDisplayProps): React.ReactElement {
       <div className={cs("whitespace-pre-wrap", "py-2")}>
         {lines.map((l, i) => `${l}\n`) ?? ""}
       </div>
-    </>
+    </div>
   );
 }

@@ -233,16 +233,13 @@ function Landing() {
               "dark:bg-slate-800",
               "dark:text-slate-100",
               "rounded-md",
-              "font-mono",
               "border-gray-300",
               "dark:border-gray-600",
               "border",
-              "flex",
-              "flex-row",
-              "col-span-1",
-              "overflow-y-auto"
+              "overflow-y-auto",
             )}
           >
+            {/* <div>Hello</div> */}
             <InputDisplay data={selectedProblemInput.data} />
           </div>
         </div>
