@@ -1,13 +1,5 @@
-import {
-  Badge,
-  Button,
-  Label,
-  ListGroup,
-  Select,
-  Spinner,
-  Textarea,
-} from "flowbite-react";
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { Button, ListGroup, Spinner } from "flowbite-react";
+import { useCallback, useMemo, useState } from "react";
 import { Header } from "../components/Header";
 import {
   Answer,
@@ -21,19 +13,10 @@ import {
 import { ResultDisplay } from "../components/ResultDisplay";
 import { InputDisplay } from "../components/EnumeratedTextDisplay";
 import * as cs from "classnames";
-import {
-  ListGroupItem,
-  ListGroupItemProps,
-} from "flowbite-react/lib/esm/components/ListGroup/ListGroupItem";
-import {
-  CheckBadgeIcon,
-  CheckCircleIcon,
-  EllipsisHorizontalCircleIcon,
-  EllipsisHorizontalIcon,
-  QuestionMarkCircleIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/solid";
+
 import { ResultIcon } from "../components/ResultIcon";
+import { TabGroup, TabItem } from "../components/Tabs";
+import ButtonGroup from "flowbite-react/lib/esm/components/Button/ButtonGroup";
 
 export type RunResult = {
   problemInput: ProblemInput;
@@ -138,31 +121,18 @@ function Landing() {
           dayOptions={dayOptions}
           setDay={setDay}
         />
-        <div
-          className={cs(
-            "flex",
-            "flex-col",
-            "items-center",
-            "space-y-3",
-            "mt-10",
-            "w-full"
-          )}
-        >
-          <div className={cs("flex flex-row gap-2 w-full")}>
-            <ResultDisplay
-              isRunning={isRunning}
-              result={runResults.get(selectedProblemInput.name)}
-            />
-            <div className={cs("flex", "flex-col", "gap-2", "w-96")}>
-              <div
-                className={cs(
-                  "flex",
-                  "space-x-4",
-                  "items-end",
-                  "justify-between"
-                )}
-              >
-                <div className={cs("flex", "space-x-2")}>
+        <div className={cs("flex", "flex-col", "space-y-3", "mt-10", "w-full")}>
+          <div className={cs("flex", "flex-col", "gap-2", "w-full")}>
+            <div
+              className={cs(
+                "flex",
+                "space-x-4",
+                "items-end",
+                "justify-between"
+              )}
+            >
+              <div className={cs("flex", "space-x-2")}>
+                <ButtonGroup>
                   <Button
                     color={isRunning ? "info" : "success"}
                     onClick={() => runProblemInputs([selectedProblemInput])}
@@ -195,53 +165,73 @@ function Landing() {
                       "Run all"
                     )}
                   </Button>
-                </div>
+                </ButtonGroup>
               </div>
-              <ListGroup>
-                {problemInputs.map((p) => (
-                  <ListGroupItem
-                    key={`option-${p.name}`}
-                    active={selectedProblemInput?.name == p.name}
-                    onClick={() => setSelectedProblemInput(p)}
-                  >
-                    <div
-                      className={cs(
-                        "flex",
-                        "space-x-2",
-                        "items-center",
-                        "justify-center"
-                      )}
-                    >
-                      <div className={cs("w-6")}>
-                        <ResultIcon
-                          evaluations={runResults.get(p.name)?.evaluation}
-                        />
-                      </div>
-                      <div>{p.name}</div>
-                    </div>
-                  </ListGroupItem>
-                ))}
-              </ListGroup>
             </div>
           </div>
           <div
             className={cs(
+              "flex",
+              "flex-col",
               "w-full",
-              "h-64",
-              "resize-y",
-              "bg-slate-50",
-              "dark:bg-slate-800",
-              "dark:text-slate-100",
               "rounded-md",
+              "border",
               "border-gray-300",
               "dark:border-gray-600",
-              "border",
-              "overflow-y-auto",
+              "divide-y",
+              "divide-gray-300",
+              "dark:divide-gray-600"
             )}
           >
-            {/* <div>Hello</div> */}
-            <InputDisplay data={selectedProblemInput.data} />
+            <div className={cs()}>
+              <TabGroup aria-label="Default tabs">
+                {problemInputs.map((p) => (
+                  <TabItem
+                    key={`option-${p.name}`}
+                    title={
+                      <div
+                        className={cs(
+                          "flex",
+                          "space-x-2",
+                          "items-center",
+                          "justify-center"
+                        )}
+                      >
+                        <div className={cs("w-6")}>
+                          <ResultIcon
+                            evaluations={runResults.get(p.name)?.evaluation}
+                          />
+                        </div>
+                        <div>{p.name}</div>
+                      </div>
+                    }
+                    ariaCurrent={p.name}
+                    active={selectedProblemInput?.name == p.name}
+                    onClick={() => setSelectedProblemInput(p)}
+                  />
+                ))}
+              </TabGroup>
+            </div>
+
+            <div
+              className={cs(
+                "w-full",
+                "h-64",
+                "resize-y",
+                "rounded-b-md",
+                "bg-slate-50",
+                "dark:bg-slate-800",
+                "dark:text-slate-100",
+                "overflow-y-auto"
+              )}
+            >
+              <InputDisplay data={selectedProblemInput.data} />
+            </div>
           </div>
+          <ResultDisplay
+            isRunning={isRunning}
+            result={runResults.get(selectedProblemInput.name)}
+          />
         </div>
       </div>
     </div>
