@@ -25,18 +25,19 @@ export function TabGroup({ children }: GroupProps) {
 
 interface ItemProps {
   title: ReactNode;
-  ariaCurrent: string;
+  ariaLabel: string;
   active?: boolean;
   onClick?: () => void;
 }
 
-export function TabItem({ title, ariaCurrent, active, onClick }: ItemProps) {
+export function TabItem({ title, ariaLabel, active, onClick }: ItemProps) {
   let classes = [
     "inline-block",
     "p-4",
     "w-full",
     "first:rounded-tl-md",
     "last:rounded-tr-md",
+    "cursor-pointer",
   ];
 
   if (!active) {
@@ -63,7 +64,13 @@ export function TabItem({ title, ariaCurrent, active, onClick }: ItemProps) {
   }
 
   return (
-    <li className={cs(classes)} onClick={onClick}>
+    <li
+      className={cs(classes)}
+      onClick={onClick}
+      aria-current={active}
+      aria-label={ariaLabel}
+      tabIndex={0}
+    >
       {title}
     </li>
   );

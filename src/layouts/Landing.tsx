@@ -200,12 +200,13 @@ function Landing() {
                         <div className={cs("w-6")}>
                           <ResultIcon
                             evaluations={runResults.get(p.name)?.evaluation}
+                            useColor
                           />
                         </div>
                         <div>{p.name}</div>
                       </div>
                     }
-                    ariaCurrent={p.name}
+                    ariaLabel={p.name}
                     active={selectedProblemInput?.name == p.name}
                     onClick={() => setSelectedProblemInput(p)}
                   />
