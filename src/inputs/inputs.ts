@@ -93,3 +93,36 @@ export function evaluateRunResult(
 
   return [answers[0], answers[1]];
 }
+
+export enum AggregateEvaluation {
+  AllCorrect,
+  PartialCorrect,
+  AllIncorrect,
+  Incomplete,
+}
+
+export function getAggregateEvaluation(
+  evaluations: AnswerEval[] | AnswerEval | undefined
+): AggregateEvaluation {
+  if (evaluations == null) {
+    return AggregateEvaluation.Incomplete;
+  }
+
+  const wrappedEvaluations =
+    evaluations instanceof Array ? evaluations : [evaluations];
+  if (wrappedEvaluations.some((e) => e === AnswerEval.Incomplete)) {
+    return AggregateEvaluation.Incomplete;
+  }
+
+  // Everything is correct
+  if (wrappedEvaluations.every((e) => e === AnswerEval.Correct)) {
+    return AggregateEvaluation.AllCorrect;
+  }
+
+  // Nothing is Incorrect, but not everything is Correct (some Incomplete)
+  if (wrappedEvaluations.every((e) => e !== AnswerEval.Incorrect)) {
+    return AggregateEvaluation.PartialCorrect;
+  }
+
+  return AggregateEvaluation.AllIncorrect;
+}
