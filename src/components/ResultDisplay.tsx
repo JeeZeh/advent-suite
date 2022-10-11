@@ -1,60 +1,115 @@
-import { Badge, BadgeColors, Spinner, Textarea } from "flowbite-react";
-import { AnswerEval } from "../inputs/inputs";
+import { Badge, BadgeColors, Spinner, Tooltip } from "flowbite-react";
+import {
+  AggregateEvaluation,
+  AnswerEval,
+  getAggregateEvaluation,
+} from "../inputs/inputs";
 import { RunResult } from "../layouts/Landing";
-import { InputDisplay } from "./EnumeratedTextDisplay";
 import * as cs from "classnames";
+import { ResultIcon } from "./ResultIcon";
+import { useCallback, useRef } from "react";
+
+function getHeaderTheme(evaluation: AggregateEvaluation): string[] {
+  switch (evaluation) {
+    case AggregateEvaluation.AllCorrect:
+      return ["border-green-400"];
+    case AggregateEvaluation.PartialCorrect:
+      return ["border-yellow-400", "dark:border-yellow-300"];
+    case AggregateEvaluation.AllIncorrect:
+      return ["border-red-400"];
+    default:
+      return ["border-gray-400"];
+  }
+}
+
+interface HeaderTextProps {
+  result: RunResult;
+}
+
+function HeaderText({ result }: HeaderTextProps) {
+  const headerTextRef = useRef<HTMLHeadingElement>(null);
+
+  const headerTitle = (
+    <h3
+      ref={headerTextRef}
+      style={{ maxWidth: "10rem" }} // Not sure how to do this in Tailwind yet
+      className={cs(
+        "text-lg",
+        "font-semibold",
+        "dark:font-normal",
+        "text-ellipsis",
+        "overflow-hidden",
+        "whitespace-nowrap"
+      )}
+    >
+      {result.problemInput.name}
+    </h3>
+  );
+
+  // Used to check if text is truncated, i.e. with ellipsis
+  const isEllipsisActive = useCallback(() => {
+    const current = headerTextRef.current;
+    if (current && current.offsetWidth < current.scrollWidth) {
+      return true;
+    }
+    return false;
+  }, [headerTextRef]);
+
+  return (
+    <div className={cs("font-mono", "flex", "gap-2", "items-center")}>
+      <ResultIcon evaluations={result.evaluation} size="md" />
+      <div className={cs("flex", "items-baseline", "gap-2", "select-none")}>
+        {isEllipsisActive() ? (
+          <Tooltip content={result.problemInput.name} animation="duration-50">
+            {headerTitle}
+          </Tooltip>
+        ) : (
+          headerTitle
+        )}
+        <p className={cs("text-sm", "opacity-70")}>
+          {result.runtimeMs.toFixed(2)}ms
+        </p>
+      </div>
+    </div>
+  );
+}
+
+interface PartResultProps {
+  label: string;
+  evaluation: AnswerEval;
+  result?: string;
+  expected?: string;
+}
+function PartResult({ label, evaluation, result, expected }: PartResultProps) {
+  const tooltip = (
+    <div>
+      <p>Expected: {expected ?? "?"}</p>
+      <p>Result: {result ?? "?"}</p>
+    </div>
+  );
+  return (
+    <Tooltip content={tooltip} animation="duration-50">
+      <div
+        className={cs(
+          "font-mono",
+          "flex",
+          "gap-2",
+          "items-center",
+          "cursor-default"
+        )}
+      >
+        <ResultIcon evaluations={evaluation} size="md" useColor />
+
+        <h4>{label}</h4>
+      </div>
+    </Tooltip>
+  );
+}
 
 interface ResultDisplayProps {
   isRunning: boolean;
   result?: RunResult;
 }
-function formatResult(result?: RunResult): string | undefined {
-  if (!result) {
-    return;
-  }
-
-  const { answer, runtimeMs } = result;
-  return `Part 1: ${answer.partOne}\nPart 2: ${
-    answer.partTwo
-  }\nRuntime: ${runtimeMs.toPrecision(4)}ms`;
-}
-
-function getBadgeColor(answerEval: AnswerEval): keyof BadgeColors {
-  if (answerEval === AnswerEval.Correct) {
-    return "success";
-  }
-
-  if (answerEval === AnswerEval.Incomplete) {
-    return "gray";
-  }
-
-  return "failure";
-}
-
-interface EvaluationBadgeProps {
-  answer?: string;
-  expected: string;
-  evaluation: AnswerEval;
-}
-function EvaluationBadge({
-  evaluation,
-  answer,
-  expected,
-}: EvaluationBadgeProps) {
-  if (answer == null) {
-    <Badge color="gray" size="md">
-      Incomplete
-    </Badge>;
-  }
-
-  return (
-    <Badge color={getBadgeColor(evaluation)} size="md">
-      <div>Answer: {answer}</div>
-      {evaluation === AnswerEval.Incorrect && <div>Expected: {expected}</div>}
-    </Badge>
-  );
-}
-
 export function ResultDisplay({ isRunning, result }: ResultDisplayProps) {
   if (isRunning) {
     return <Spinner />;
@@ -64,36 +119,49 @@ export function ResultDisplay({ isRunning, result }: ResultDisplayProps) {
     return null;
   }
 
+  const headerTheme = getHeaderTheme(getAggregateEvaluation(result.evaluation));
+
   return (
     <div
       className={cs(
-        "p-4",
-        "w-64",
-        "rounded-md",
-        "bg-slate-50",
-        "border",
-        "bg-slate-50",
-        "dark:bg-slate-800",
-        "dark:text-slate-100",
-        "border-gray-300",
-        "dark:border-gray-600"
+        "w-80",
+        "bg-slate-100",
+        "dark:bg-gray-700",
+        "shadow-md",
+        "rounded-2xl",
+        "text-slate-700",
+        "dark:text-slate-200"
       )}
     >
-      <p className="text-lg font-bold font-mono mb-2">{result.problemInput.name}</p>
-      <div className="flex flex-col gap-1">
-        <EvaluationBadge
-          answer={result.answer.partOne}
-          expected={result.problemInput.expected.partOne}
+      <div
+        className={cs(
+          "w-full",
+          "bg-slate-50",
+          "dark:bg-slate-800",
+          "rounded-t-2xl",
+          "rounded-b-lg",
+          "p-4",
+          "box-border",
+          "border-b-4",
+          "shadow-sm",
+          ...headerTheme
+        )}
+      >
+        <HeaderText result={result} />
+      </div>
+      <div className={cs("w-full", "p-4", "flex", "justify-center", "gap-16")}>
+        <PartResult
+          label="Part 1"
           evaluation={result.evaluation[0]}
+          expected={result.problemInput.expected.partOne}
+          result={result.answer.partOne}
         />
-        <EvaluationBadge
-          answer={result.answer.partTwo}
-          expected={result.problemInput.expected.partTwo}
+        <PartResult
+          label="Part 2"
           evaluation={result.evaluation[1]}
+          expected={result.problemInput.expected.partTwo}
+          result={result.answer.partTwo}
         />
-        <Badge color="info" size="md">
-          <div>Runtime: {result.runtimeMs.toPrecision(2)}ms</div>
-        </Badge>
       </div>
     </div>
   );
