@@ -229,10 +229,22 @@ function Landing() {
               <InputDisplay data={selectedProblemInput.data} />
             </div>
           </div>
-          <ResultDisplay
-            isRunning={isRunning}
-            result={runResults.get(selectedProblemInput.name)}
-          />
+          {runResults.size > 0 && (
+            <div className={cs("flex", "flex-col", "gap-4", "px-2", "pt-4")}>
+              <h3 className={cs("text-3xl", "dark:text-slate-100")}>Results</h3>
+              <div className={cs("flex", "flex-wrap", "gap-4")}>
+                {problemInputs
+                  .filter((p) => runResults.has(p.name))
+                  .map((p) => (
+                    <ResultDisplay
+                      key={p.name}
+                      isRunning={isRunning}
+                      result={runResults.get(p.name)}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
