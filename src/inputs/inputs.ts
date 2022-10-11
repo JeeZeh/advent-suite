@@ -11,16 +11,15 @@ export type ProblemInput = {
   name: string;
   data: string;
   isReal?: boolean;
-  expected: Required<Answer>;
+  expected: Answer;
 };
-
 export const INPUT_INDEX: {
   [key: string]: { [key: string]: ProblemInput[] };
 } = {
   "2021": {
     "01": [
       {
-        name: "Example 1",
+        name: "All Correct",
         data: i2021_01_ex,
         expected: {
           partOne: "7",
@@ -28,21 +27,26 @@ export const INPUT_INDEX: {
         },
       },
       {
-        name: "Example with Bad Answer",
+        name: "Partially Incorrect",
         data: i2021_01_ex,
         expected: {
-          partOne: "4",
+          partOne: "-1",
           partTwo: "5",
+        },
+      },
+      {
+        name: "All Incorrect",
+        data: i2021_01_real,
+        expected: {
+          partOne: "-1",
+          partTwo: "-1",
         },
       },
       {
         name: "Real Input",
         data: i2021_01_real,
         isReal: true,
-        expected: {
-          partOne: "1564",
-          partTwo: "1611",
-        },
+        expected: {},
       },
     ],
   },
@@ -110,7 +114,7 @@ export function getAggregateEvaluation(
 
   const wrappedEvaluations =
     evaluations instanceof Array ? evaluations : [evaluations];
-  if (wrappedEvaluations.some((e) => e === AnswerEval.Incomplete)) {
+  if (wrappedEvaluations.every((e) => e === AnswerEval.Incomplete)) {
     return AggregateEvaluation.Incomplete;
   }
 
@@ -119,10 +123,11 @@ export function getAggregateEvaluation(
     return AggregateEvaluation.AllCorrect;
   }
 
-  // Nothing is Incorrect, but not everything is Correct (some Incomplete)
-  if (wrappedEvaluations.every((e) => e !== AnswerEval.Incorrect)) {
-    return AggregateEvaluation.PartialCorrect;
+  // Everything is incorrect
+  if (wrappedEvaluations.every((e) => e === AnswerEval.Incorrect)) {
+    return AggregateEvaluation.AllIncorrect;
   }
 
-  return AggregateEvaluation.AllIncorrect;
+  // Partial correct
+  return AggregateEvaluation.PartialCorrect;
 }
