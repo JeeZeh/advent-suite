@@ -29,11 +29,11 @@ function getIcon(
 function getColor(evaluation: AggregateEvaluation): string[] {
   switch (evaluation) {
     case AggregateEvaluation.AllCorrect:
-      return ["fill-green-600", "dark:fill-green-400"];
+      return ["fill-green-500", "dark:fill-green-400"];
     case AggregateEvaluation.PartialCorrect:
-      return ["fill-yellow-400"];
+      return ["fill-yellow-400", "dark:fill-yellow-300"];
     case AggregateEvaluation.AllIncorrect:
-      return ["fill-red-600", "dark:fill-red-400"];
+      return ["fill-red-500", "dark:fill-red-400"];
     default:
       return [];
   }
