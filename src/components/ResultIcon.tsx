@@ -55,7 +55,7 @@ interface ResultIconProps extends React.SVGProps<SVGSVGElement> {
  * @returns An SVG with the icon corresponding to the input evaluation result.
  */
 export function ResultIcon(props: ResultIconProps) {
-  const { evaluations, useColor, size, className, ...rest } = props;
+  const { evaluations, useColor, size, className, ...otherSvgProps } = props;
 
   // Collect classes to apply to icon
   const determinedClasses = [];
@@ -70,5 +70,5 @@ export function ResultIcon(props: ResultIconProps) {
 
   determinedClasses.push(iconSizes[props.size ?? "md"]);
 
-  return <Icon {...props} className={classNames(determinedClasses)} />;
+  return <Icon {...otherSvgProps} className={classNames(determinedClasses)} />;
 }
