@@ -11,6 +11,10 @@ import {
 } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 
+/**
+ * Given an AggregateEvaluation, returns an appropriate SVG icon to be used
+ * as the ResultIcon.
+ */
 function getIcon(
   evaluation: AggregateEvaluation
 ): (props: React.SVGProps<SVGSVGElement>) => JSX.Element {
@@ -26,6 +30,10 @@ function getIcon(
   }
 }
 
+/**
+* Given an AggregateEvaluation, returns an appropriate color to be used
+* for the ResultIcon, if useColor is provided.
+*/
 function getColor(evaluation: AggregateEvaluation): string[] {
   switch (evaluation) {
     case AggregateEvaluation.AllCorrect:
@@ -50,6 +58,7 @@ interface ResultIconProps extends React.SVGProps<SVGSVGElement> {
   useColor?: boolean;
   size?: keyof typeof iconSizes;
 }
+
 /**
  * Determine and return which icon to display for the RunResult evaluation.
  * @returns An SVG with the icon corresponding to the input evaluation result.

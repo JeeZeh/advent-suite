@@ -97,3 +97,11 @@ export function Landing() {
 }
 
 export default Landing;
+
+/**
+ * Consider continually rerunning the input or running it every time you save it.
+ * Each problem input would be mapped to an ongoing promise which runs the latest state of each solution.
+ * If a problem is still running when a new solution is saved, cancel the existing promise and resubmit the new solution.
+ * 
+ * Live feedback as you work.
+ */

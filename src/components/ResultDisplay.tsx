@@ -8,17 +8,22 @@ import { RunResult } from "../layouts/Landing";
 import * as cs from "classnames";
 import { ResultIcon } from "./ResultIcon";
 import { useCallback, useRef } from "react";
+import classNames from "classnames";
 
-function getHeaderTheme(evaluation: AggregateEvaluation): string[] {
+/**
+ * Given an AggregateEvaluation, returns an array of styles to be applied to the header,
+ * comprising a 'theme' for the header.
+ */
+function getHeaderStyle(evaluation: AggregateEvaluation): string {
   switch (evaluation) {
     case AggregateEvaluation.AllCorrect:
-      return ["border-green-400"];
+        return classNames("border-green-400");
     case AggregateEvaluation.PartialCorrect:
-      return ["border-yellow-400", "dark:border-yellow-300"];
+        return classNames("border-yellow-400", "dark:border-yellow-300");
     case AggregateEvaluation.AllIncorrect:
-      return ["border-red-400"];
+        return classNames("border-red-400");
     default:
-      return ["border-gray-400"];
+        return classNames("border-gray-400");
   }
 }
 
@@ -119,7 +124,7 @@ export function ResultDisplay({ isRunning, result }: ResultDisplayProps) {
     return null;
   }
 
-  const headerTheme = getHeaderTheme(getAggregateEvaluation(result.evaluation));
+  const headerTheme = getHeaderStyle(getAggregateEvaluation(result.evaluation));
 
   return (
     <div
