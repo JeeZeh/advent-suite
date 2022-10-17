@@ -1,18 +1,19 @@
+import classNames from "classnames";
 import React, { useMemo } from "react";
-import * as cs from "classnames";
 
 interface InputDisplayProps {
   data?: string;
 }
-export function InputDisplay({ data }: InputDisplayProps): React.ReactElement {
+export function EnumeratedTextDisplay({
+  data,
+}: InputDisplayProps): React.ReactElement {
   if (!data) {
     return (
       <div
-        className={cs(
+        className={classNames(
           "flex",
           "justify-center",
           "items-center",
-          "w-full",
           "h-full",
           "p-5",
           "opacity-75"
@@ -28,11 +29,19 @@ export function InputDisplay({ data }: InputDisplayProps): React.ReactElement {
   const lines = useMemo(() => data.split("\n"), [data]);
 
   return (
-    <div className={cs("flex", "flex-row", "font-mono", "h-min", "min-h-full")}>
+    <div
+      className={classNames(
+        "flex",
+        "flex-row",
+        "font-mono",
+        "h-min",
+        "min-h-full"
+      )}
+    >
       {/* Left-hand gutter with line numbers  */}
       {/* Required 'height: min-content; min-height: 100%' for resizable + scrollable bg to always be visible */}
       <div
-        className={cs(
+        className={classNames(
           "whitespace-pre-wrap",
           "font-light",
           "select-none",
@@ -53,7 +62,7 @@ export function InputDisplay({ data }: InputDisplayProps): React.ReactElement {
         )}
       </div>
       {/* Right-hand input display  */}
-      <div className={cs("whitespace-pre-wrap", "py-2")}>
+      <div className={classNames("whitespace-pre-wrap", "py-2")}>
         {lines.map((l, i) => `${l}\n`) ?? ""}
       </div>
     </div>

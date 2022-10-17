@@ -1,6 +1,6 @@
 import { Button, Spinner } from "flowbite-react";
 import { ProblemInput } from "../inputs/inputs";
-import { InputDisplay } from "./EnumeratedTextDisplay";
+import { EnumeratedTextDisplay } from "./EnumeratedTextDisplay";
 import * as cs from "classnames";
 import { ResultIcon } from "./ResultIcon";
 import { TabGroup, TabItem } from "./Tabs";
@@ -143,7 +143,6 @@ function InputSelector({
 
         <div
           className={cs(
-            "w-full",
             "h-64",
             "resize-y",
             "rounded-b-md",
@@ -153,7 +152,7 @@ function InputSelector({
             "overflow-y-auto"
           )}
         >
-          <InputDisplay data={selectedProblemInput.data} />
+          <EnumeratedTextDisplay data={selectedProblemInput.data} />
         </div>
       </div>
     </>
