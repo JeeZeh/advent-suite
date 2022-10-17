@@ -18,7 +18,7 @@ export function ResultContainer({
     <div className={cs("flex", "flex-col", "gap-4", "px-2", "py-8")}>
       <h3 className={cs("text-3xl", "dark:text-slate-100")}>Results</h3>
       <ResultProgressBar runResults={runResults} />
-      <div className={cs("flex", "flex-wrap", "gap-4")}>
+      <div className={cs("flex", "flex-wrap", "gap-6", "justify-center")}>
         {problemInputs
           .filter((p) => runResults.has(p.name))
           .map((p) => (
