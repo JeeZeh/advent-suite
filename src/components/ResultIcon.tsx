@@ -34,23 +34,23 @@ function getIcon(
 * Given an AggregateEvaluation, returns an appropriate color to be used
 * for the ResultIcon, if useColor is provided.
 */
-function getColor(evaluation: AggregateEvaluation): string[] {
+function getColor(evaluation: AggregateEvaluation): string {
   switch (evaluation) {
     case AggregateEvaluation.AllCorrect:
-      return ["fill-green-500", "dark:fill-green-400"];
+      return classNames("fill-green-500", "dark:fill-green-400");
     case AggregateEvaluation.PartialCorrect:
-      return ["fill-yellow-400", "dark:fill-yellow-300"];
+      return classNames("fill-yellow-400", "dark:fill-yellow-300");
     case AggregateEvaluation.AllIncorrect:
-      return ["fill-red-500", "dark:fill-red-400"];
+      return classNames("fill-red-500", "dark:fill-red-400");
     default:
-      return [];
+      return "";
   }
 }
 
 const iconSizes = {
   sm: "h-4",
-  md: "h-6",
-  lg: "h-8",
+  md: "h-5",
+  lg: "h-6",
 };
 
 interface ResultIconProps extends React.SVGProps<SVGSVGElement> {
