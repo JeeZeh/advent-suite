@@ -43,7 +43,7 @@ export function TabItem({ title, ariaLabel, active, onClick }: ItemProps) {
     "first:rounded-tl-md",
     "last:rounded-tr-md",
     "cursor-pointer",
-    "w-48",
+    "w-full",
   ];
 
   if (!active) {
