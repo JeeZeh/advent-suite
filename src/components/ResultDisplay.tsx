@@ -4,11 +4,10 @@ import {
   AnswerEval,
   getAggregateEvaluation,
 } from "../inputs/inputs";
-import { RunResult } from "../layouts/Landing";
-import * as cs from "classnames";
 import { ResultIcon } from "./ResultIcon";
 import { useCallback, useRef } from "react";
 import classNames from "classnames";
+import { RunResult } from "../solutions/utils";
 
 /**
  * Given an AggregateEvaluation, returns an array of styles to be applied to the header,
@@ -17,13 +16,13 @@ import classNames from "classnames";
 function getHeaderStyle(evaluation: AggregateEvaluation): string {
   switch (evaluation) {
     case AggregateEvaluation.AllCorrect:
-        return classNames("border-green-400");
+      return classNames("border-green-400");
     case AggregateEvaluation.PartialCorrect:
-        return classNames("border-yellow-400", "dark:border-yellow-300");
+      return classNames("border-yellow-400", "dark:border-yellow-300");
     case AggregateEvaluation.AllIncorrect:
-        return classNames("border-red-400");
+      return classNames("border-red-400");
     default:
-        return classNames("border-gray-400");
+      return classNames("border-gray-400");
   }
 }
 
@@ -38,7 +37,7 @@ function HeaderText({ result }: HeaderTextProps) {
     <h3
       ref={headerTextRef}
       style={{ maxWidth: "10rem" }} // Not sure how to do this in Tailwind yet
-      className={cs(
+      className={classNames(
         "text-lg",
         "font-semibold",
         "dark:font-normal",
@@ -58,12 +57,14 @@ function HeaderText({ result }: HeaderTextProps) {
       return true;
     }
     return false;
-  }, [headerTextRef]);
+  }, [headerTextRef, result]);
 
   return (
-    <div className={cs("font-mono", "flex", "gap-2", "items-center")}>
+    <div className={classNames("font-mono", "flex", "gap-2", "items-center")}>
       <ResultIcon evaluations={result.evaluation} size="md" />
-      <div className={cs("flex", "items-baseline", "gap-2", "select-none")}>
+      <div
+        className={classNames("flex", "items-baseline", "gap-2", "select-none")}
+      >
         {isEllipsisActive() ? (
           <Tooltip content={result.problemInput.name} animation="duration-50">
             {headerTitle}
@@ -71,7 +72,7 @@ function HeaderText({ result }: HeaderTextProps) {
         ) : (
           headerTitle
         )}
-        <p className={cs("text-sm", "opacity-70")}>
+        <p className={classNames("text-sm", "opacity-70")}>
           {result.runtimeMs.toFixed(2)}ms
         </p>
       </div>
@@ -95,7 +96,7 @@ function PartResult({ label, evaluation, result, expected }: PartResultProps) {
   return (
     <Tooltip content={tooltip} animation="duration-50">
       <div
-        className={cs(
+        className={classNames(
           "font-mono",
           "flex",
           "gap-2",
@@ -103,8 +104,9 @@ function PartResult({ label, evaluation, result, expected }: PartResultProps) {
           "cursor-default"
         )}
       >
-        <ResultIcon evaluations={evaluation} size="md" useColor />
-
+        <div>
+          <ResultIcon evaluations={evaluation} size="md" useColor />
+        </div>
         <h4>{label}</h4>
       </div>
     </Tooltip>
@@ -128,7 +130,7 @@ export function ResultDisplay({ isRunning, result }: ResultDisplayProps) {
 
   return (
     <div
-      className={cs(
+      className={classNames(
         "w-80",
         "bg-slate-100",
         "dark:bg-gray-700",
@@ -139,8 +141,7 @@ export function ResultDisplay({ isRunning, result }: ResultDisplayProps) {
       )}
     >
       <div
-        className={cs(
-          "w-full",
+        className={classNames(
           "bg-slate-50",
           "dark:bg-slate-800",
           "rounded-t-2xl",
@@ -149,12 +150,19 @@ export function ResultDisplay({ isRunning, result }: ResultDisplayProps) {
           "box-border",
           "border-b-4",
           "shadow-sm",
-          ...headerTheme
+          headerTheme
         )}
       >
         <HeaderText result={result} />
       </div>
-      <div className={cs("w-full", "p-4", "flex", "justify-center", "gap-16")}>
+      <div
+        className={classNames(
+          "p-4",
+          "flex",
+          "justify-center",
+          "gap-16"
+        )}
+      >
         <PartResult
           label="Part 1"
           evaluation={result.evaluation[0]}
