@@ -6,11 +6,11 @@ import {
   getYearOptions,
   ProblemInput,
 } from "../inputs/inputs";
-import * as cs from "classnames";
 
 import { ResultContainer } from "../components/ResultsContainer";
 import InputSelector from "../components/InputSelector";
 import { RunResult, runSolution } from "../solutions/utils";
+import classNames from "classnames";
 
 export function Landing() {
   const [year, setYear] = useState<string>(getYearOptions()[0]);
@@ -50,7 +50,7 @@ export function Landing() {
   // TODO: Refactor this render into smaller components
   return (
     <div
-      className={cs(
+      className={classNames(
         "font-sans",
         "bg-slate-100",
         "dark:bg-slate-900",
@@ -58,7 +58,7 @@ export function Landing() {
       )}
     >
       <div
-        className={cs(
+        className={classNames(
           "grid",
           "max-w-4xl",
           "grid-flow-row",
@@ -74,7 +74,15 @@ export function Landing() {
           dayOptions={dayOptions}
           setDay={setDay}
         />
-        <div className={cs("flex", "flex-col", "space-y-3", "mt-10", "w-full")}>
+        <div
+          className={classNames(
+            "flex",
+            "flex-col",
+            "space-y-3",
+            "mt-10",
+            "max-w-4xl"
+          )}
+        >
           <InputSelector
             isRunning={isRunning}
             problemInputs={problemInputs}
@@ -102,6 +110,6 @@ export default Landing;
  * Consider continually rerunning the input or running it every time you save it.
  * Each problem input would be mapped to an ongoing promise which runs the latest state of each solution.
  * If a problem is still running when a new solution is saved, cancel the existing promise and resubmit the new solution.
- * 
+ *
  * Live feedback as you work.
  */
