@@ -1,4 +1,3 @@
-import { RunResult } from "../layouts/Landing";
 import i2021_01_ex from "./2021/01/example";
 import i2021_01_real from "./2021/01/real";
 
@@ -27,7 +26,7 @@ export const INPUT_INDEX: {
         },
       },
       {
-        name: "Partially Incorrect",
+        name: "Partially Incorrect with really really long name omg!",
         data: i2021_01_ex,
         expected: {
           partOne: "-1",
