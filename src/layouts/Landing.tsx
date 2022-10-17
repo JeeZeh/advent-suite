@@ -53,16 +53,18 @@ export function Landing() {
         "font-sans",
         "bg-slate-100",
         "dark:bg-slate-900",
-        "min-h-screen"
+        "min-h-screen",
+        "flex",
+        "flex-col",
+        "items-center"
       )}
     >
       <div
         className={classNames(
-          "grid",
-          "grid-flow-row",
-          "place-items-center",
-          "w-2/3",
-          "m-auto"
+          "flex",
+          "flex-col",
+          "items-center",
+          "w-2/3"
         )}
       >
         <Header
@@ -77,9 +79,10 @@ export function Landing() {
           className={classNames(
             "flex",
             "flex-col",
+            "justify-center",
             "space-y-3",
             "mt-10",
-            "w-3/4",
+            "w-5/6"
           )}
         >
           <InputSelector
