@@ -5,39 +5,45 @@ interface GroupProps {
   children: ReactNode[];
 }
 export function TabGroup({ children }: GroupProps) {
-  let classes = [
-    "hidden",
-    "text-sm",
-    "font-medium",
-    "text-center",
-    "text-gray-500",
-    "rounded-t-md",
-    "divide-x",
-    "divide-gray-200",
-    "sm:flex",
-    "dark:divide-gray-700",
-    "dark:text-gray-400",
-    "first:bg-red-300",
-  ];
-
-  return <ul className={cs(classes)}>{children}</ul>;
+  return (
+    <ul
+      className={cs(
+        "flex",
+        "text-sm",
+        "font-medium",
+        "text-center",
+        "text-gray-500",
+        "rounded-t-md",
+        "divide-x",
+        "divide-gray-200",
+        "dark:divide-gray-700",
+        "dark:text-gray-400",
+        "bg-gray-200",
+        "overflow-hidden",
+        "overflow-x-auto"
+      )}
+    >
+      {children}
+    </ul>
+  );
 }
 
 interface ItemProps {
   title: ReactNode;
   ariaLabel: string;
   active?: boolean;
+  icon?: ReactNode;
   onClick?: () => void;
 }
 
 export function TabItem({ title, ariaLabel, active, onClick }: ItemProps) {
   let classes = [
     "inline-block",
-    "p-4",
-    "w-full",
+    "p-3",
     "first:rounded-tl-md",
     "last:rounded-tr-md",
     "cursor-pointer",
+    "w-48",
   ];
 
   if (!active) {
@@ -64,14 +70,16 @@ export function TabItem({ title, ariaLabel, active, onClick }: ItemProps) {
   }
 
   return (
-    <li
-      className={cs(classes)}
-      onClick={onClick}
-      aria-current={active}
-      aria-label={ariaLabel}
-      tabIndex={0}
-    >
-      {title}
-    </li>
+    <>
+      <li
+        className={cs(classes)}
+        onClick={onClick}
+        aria-current={active}
+        aria-label={ariaLabel}
+        tabIndex={0}
+      >
+        {title}
+      </li>
+    </>
   );
 }
