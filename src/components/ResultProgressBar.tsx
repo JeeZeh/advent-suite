@@ -50,7 +50,7 @@ export function ResultProgressBar({ runResults }: ResultProgressBarProps) {
   const progressBarColor = getTestCaseProgressBarColor(testCaseProgress);
   const progressBarLabel = `Total Cases Passed (${testCaseProgress[0]}/${testCaseProgress[1]})`;
   const progressBarCompletion =
-    (testCaseProgress[0] / testCaseProgress[1]) * 100;
+    (testCaseProgress[0] / Math.max(testCaseProgress[1], 1)) * 100;
   return (
     <Progress
       progress={progressBarCompletion}
