@@ -22,7 +22,6 @@ export function Header(props: IHeaderProps): JSX.Element {
         "items-center",
         "justify-between",
         "w-full",
-        "max-w-4xl",
         "mt-4",
         "shadow-lg",
         "py-6",

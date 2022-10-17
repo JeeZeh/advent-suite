@@ -47,7 +47,6 @@ export function Landing() {
     [year, day]
   );
 
-  // TODO: Refactor this render into smaller components
   return (
     <div
       className={classNames(
@@ -60,9 +59,9 @@ export function Landing() {
       <div
         className={classNames(
           "grid",
-          "max-w-4xl",
           "grid-flow-row",
           "place-items-center",
+          "w-2/3",
           "m-auto"
         )}
       >
@@ -80,7 +79,7 @@ export function Landing() {
             "flex-col",
             "space-y-3",
             "mt-10",
-            "max-w-4xl"
+            "w-3/4",
           )}
         >
           <InputSelector
