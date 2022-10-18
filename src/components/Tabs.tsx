@@ -46,7 +46,15 @@ export function TabItem({ title, ariaLabel, active, onClick }: ItemProps) {
     "w-full",
   ];
 
-  if (!active) {
+  if (active) {
+    classes.push(
+      "text-blue-800",
+      "bg-gray-100",
+      "focus:outline-none",
+      "dark:bg-gray-700",
+      "dark:text-orange-50"
+    );
+  } else {
     classes.push(
       "bg-white",
       "hover:text-gray-700",
@@ -58,14 +66,6 @@ export function TabItem({ title, ariaLabel, active, onClick }: ItemProps) {
       "dark:hover:text-white",
       "dark:bg-gray-800",
       "dark:hover:bg-gray-700"
-    );
-  } else {
-    classes.push(
-      "text-blue-700",
-      "bg-gray-100",
-      "focus:outline-none",
-      "dark:bg-gray-700",
-      "dark:text-blue-300"
     );
   }
 
