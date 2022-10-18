@@ -72,7 +72,7 @@ function HeaderText({ result }: HeaderTextProps) {
         ) : (
           headerTitle
         )}
-        <p className={classNames("text-sm", "opacity-70")}>
+        <p className={classNames("text-xs", "opacity-70")}>
           {result.runtimeMs.toFixed(2)}ms
         </p>
       </div>
