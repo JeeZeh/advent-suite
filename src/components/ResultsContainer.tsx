@@ -2,7 +2,7 @@ import { ProblemInput } from "../inputs/inputs";
 import { ResultDisplay } from "./ResultDisplay";
 import * as cs from "classnames";
 import { ResultProgressBar } from "./ResultProgressBar";
-import { AsyncResult, RunResult } from "../solutions/utils";
+import { RunResult } from "../solutions/utils";
 
 interface ResultContainerProps {
   problemInputs: ProblemInput[];

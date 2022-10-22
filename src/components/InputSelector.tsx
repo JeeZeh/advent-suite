@@ -5,7 +5,7 @@ import * as cs from "classnames";
 import { ResultIcon } from "./ResultIcon";
 import { TabGroup, TabItem } from "./Tabs";
 import ButtonGroup from "flowbite-react/lib/esm/components/Button/ButtonGroup";
-import { AsyncResult, RunResult } from "../solutions/utils";
+import { RunResult } from "../solutions/utils";
 import { useEffect, useState } from "react";
 
 interface InputTabProps {

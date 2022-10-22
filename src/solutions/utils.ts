@@ -15,22 +15,6 @@ export type RunResult = {
   aggregateEvaluation: AggregateEvaluation;
 };
 
-export type AsyncResult = {
-  promise: Promise<RunResult>;
-  result: RunResult | null;
-};
-
-export function wrapAsyncResult(p: Promise<RunResult>): AsyncResult {
-  let wrapperRef: AsyncResult = {
-    promise: p,
-    result: null,
-  };
-
-  wrapperRef.promise = wrapperRef.promise.then((r) => (wrapperRef.result = r));
-  wrapperRef.promise.then(() => console.log("Finished!", wrapperRef));
-  return wrapperRef;
-}
-
 type SolverModule = {
   default: (input?: string) => Promise<any[]>;
 };
