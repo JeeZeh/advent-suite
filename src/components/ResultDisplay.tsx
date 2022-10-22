@@ -122,6 +122,17 @@ function PartResult({ label, evaluation, result, expected }: PartResultProps) {
   );
 }
 
+function getEvaluationsToConsider(settledResult: RunResult | null) {
+  const evaluationsForTheme = [];
+  if (settledResult?.problemInput.expected.partOne != null) {
+    evaluationsForTheme.push(settledResult.evaluation[0]);
+  }
+  if (settledResult?.problemInput.expected.partTwo != null) {
+    evaluationsForTheme.push(settledResult.evaluation[1]);
+  }
+  return evaluationsForTheme;
+}
+
 interface ResultDisplayProps {
   name: string;
   result?: Promise<RunResult>;
@@ -145,8 +156,9 @@ export function ResultDisplay({ name, result }: ResultDisplayProps) {
     }
   }, [result]);
 
+  const evaluationsForTheme = getEvaluationsToConsider(settledResult);
   const headerTheme = getHeaderStyle(
-    getAggregateEvaluation(settledResult?.evaluation)
+    getAggregateEvaluation(evaluationsForTheme)
   );
 
   return (
