@@ -74,7 +74,7 @@ export function ResultIcon(props: ResultIconProps) {
 
   // Apply color to the icon conditionally
   if (props.useColor) {
-    determinedClasses.push(...getColor(aggregateEvaluation));
+    determinedClasses.push(getColor(aggregateEvaluation));
   }
 
   determinedClasses.push(iconSizes[props.size ?? "md"]);
