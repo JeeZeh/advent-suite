@@ -76,6 +76,7 @@ export function Landing() {
             <ResultContainer
               problemInputs={problemInputs}
               runResults={runResults}
+              setSelectedProblemInput={setSelectedProblemInput}
             />
           )}
         </div>

@@ -7,10 +7,12 @@ import { RunResult } from "../solutions/utils";
 interface ResultContainerProps {
   problemInputs: ProblemInput[];
   runResults: Map<string, Promise<RunResult>>;
+  setSelectedProblemInput: (input: ProblemInput) => void;
 }
 export function ResultContainer({
   problemInputs,
   runResults,
+  setSelectedProblemInput
 }: ResultContainerProps) {
   return (
     <div className={cs("flex", "flex-col", "gap-4", "px-2", "py-8")}>
@@ -24,6 +26,7 @@ export function ResultContainer({
               key={p.name}
               name={p.name}
               result={runResults.get(p.name)}
+              setSelectedProblemInput={() => setSelectedProblemInput(p)}
             />
           ))}
       </div>

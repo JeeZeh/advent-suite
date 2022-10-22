@@ -136,8 +136,13 @@ function getEvaluationsToConsider(settledResult: RunResult | null) {
 interface ResultDisplayProps {
   name: string;
   result?: Promise<RunResult>;
+  setSelectedProblemInput: () => void;
 }
-export function ResultDisplay({ name, result }: ResultDisplayProps) {
+export function ResultDisplay({
+  name,
+  result,
+  setSelectedProblemInput: setInputActive,
+}: ResultDisplayProps) {
   const [settledResult, setSettledResult] = useState<RunResult | null>(null);
 
   useEffect(() => {
@@ -167,7 +172,7 @@ export function ResultDisplay({ name, result }: ResultDisplayProps) {
         "w-80",
         "bg-slate-100",
         "dark:bg-gray-700",
-        "shadow-md",
+        "shadow",
         "rounded-2xl",
         "text-slate-700",
         "dark:text-slate-200"
@@ -182,9 +187,15 @@ export function ResultDisplay({ name, result }: ResultDisplayProps) {
           "p-4",
           "box-border",
           "border-b-4",
+          "cursor-pointer",
           "shadow-sm",
+          "hover:shadow-md",
+          "dark:hover:shadow-none",
+          "dark:hover:bg-slate-700",
+          "transition-all",
           headerTheme
         )}
+        onClick={setInputActive}
       >
         <HeaderText name={name} result={settledResult} />
       </div>
