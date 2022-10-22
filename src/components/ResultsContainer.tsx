@@ -2,17 +2,15 @@ import { ProblemInput } from "../inputs/inputs";
 import { ResultDisplay } from "./ResultDisplay";
 import * as cs from "classnames";
 import { ResultProgressBar } from "./ResultProgressBar";
-import { RunResult } from "../solutions/utils";
+import { AsyncResult, RunResult } from "../solutions/utils";
 
 interface ResultContainerProps {
   problemInputs: ProblemInput[];
-  runResults: Map<string, RunResult>;
-  isRunning: boolean;
+  runResults: Map<string, Promise<RunResult>>;
 }
 export function ResultContainer({
   problemInputs,
   runResults,
-  isRunning,
 }: ResultContainerProps) {
   return (
     <div className={cs("flex", "flex-col", "gap-4", "px-2", "py-8")}>
@@ -24,7 +22,7 @@ export function ResultContainer({
           .map((p) => (
             <ResultDisplay
               key={p.name}
-              isRunning={isRunning}
+              name={p.name}
               result={runResults.get(p.name)}
             />
           ))}

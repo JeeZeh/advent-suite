@@ -17,35 +17,22 @@ export function Landing() {
   const [day, setDay] = useState<string>(getDayOptions(year)[0]);
   const [selectedProblemInput, setSelectedProblemInput] =
     useState<ProblemInput>(getProblemInputs(year, day)[0]);
-  const [isRunning, setIsRunning] = useState(false);
-  const [runResults, setRunResults] = useState<Map<string, RunResult>>(
-    new Map()
+  const [runResults, setRunResults] = useState(
+    new Map<string, Promise<RunResult>>()
   );
 
   const yearOptions = useMemo(() => getYearOptions(), []);
   const dayOptions = useMemo(() => getDayOptions(year), [year]);
   const problemInputs = useMemo(() => getProblemInputs(year, day), [year, day]);
 
-  const runProblemInputs = useCallback(
-    async (problemInputs: ProblemInput[]) => {
-      console.log(problemInputs);
-      const showSpinnerAfter = setTimeout(() => setIsRunning(true), 1000);
-      const results = await Promise.all(
-        problemInputs.map(async (p) => await runSolution(year, day, p))
-      );
+  const runProblemInputs = (problemInputs: ProblemInput[]) => {
+    const newResults = new Map(runResults);
+    problemInputs.forEach((p) =>
+      newResults.set(p.name, runSolution(year, day, p))
+    );
 
-      setRunResults((currentResults) => {
-        for (const result of results) {
-          currentResults.set(result.problemInput.name, result);
-        }
-        return new Map(currentResults);
-      });
-
-      clearTimeout(showSpinnerAfter);
-      setIsRunning(false);
-    },
-    [year, day]
-  );
+    setRunResults(newResults);
+  };
 
   return (
     <div
@@ -59,14 +46,7 @@ export function Landing() {
         "items-center"
       )}
     >
-      <div
-        className={classNames(
-          "flex",
-          "flex-col",
-          "items-center",
-          "w-2/3"
-        )}
-      >
+      <div className={classNames("flex", "flex-col", "items-center", "w-2/3")}>
         <Header
           year={year}
           yearOptions={yearOptions}
@@ -86,7 +66,6 @@ export function Landing() {
           )}
         >
           <InputSelector
-            isRunning={isRunning}
             problemInputs={problemInputs}
             runResults={runResults}
             selectedProblemInput={selectedProblemInput}
@@ -97,7 +76,6 @@ export function Landing() {
             <ResultContainer
               problemInputs={problemInputs}
               runResults={runResults}
-              isRunning={isRunning}
             />
           )}
         </div>
@@ -107,11 +85,3 @@ export function Landing() {
 }
 
 export default Landing;
-
-/**
- * Consider continually rerunning the input or running it every time you save it.
- * Each problem input would be mapped to an ongoing promise which runs the latest state of each solution.
- * If a problem is still running when a new solution is saved, cancel the existing promise and resubmit the new solution.
- *
- * Live feedback as you work.
- */

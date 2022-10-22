@@ -1,10 +1,9 @@
 import { Progress } from "flowbite-react";
+import { useEffect, useState } from "react";
 import { AnswerEval } from "../inputs/inputs";
 import { RunResult } from "../solutions/utils";
 
-function getTestCaseProgress(
-  results: IterableIterator<RunResult>
-): [number, number] {
+function getTestCaseProgress(results: RunResult[]): [number, number] {
   let upperBoundSuccess = 0;
   let actualSuccess = 0;
 
@@ -43,14 +42,22 @@ export function getTestCaseProgressBarColor(
   return "green";
 }
 interface ResultProgressBarProps {
-  runResults: Map<string, RunResult>;
+  runResults: Map<string, Promise<RunResult>>;
 }
 export function ResultProgressBar({ runResults }: ResultProgressBarProps) {
-  const testCaseProgress = getTestCaseProgress(runResults.values());
+  const [results, setResults] = useState<RunResult[]>([]);
+
+  useEffect(() => {
+    Promise.all(runResults.values()).then(setResults);
+  }, [runResults]);
+
+  const testCaseProgress = getTestCaseProgress(results);
   const progressBarColor = getTestCaseProgressBarColor(testCaseProgress);
   const progressBarLabel = `Total Cases Passed (${testCaseProgress[0]}/${testCaseProgress[1]})`;
-  const progressBarCompletion =
-    ((testCaseProgress[0] / Math.max(testCaseProgress[1], 1)) * 100).toPrecision(3);
+  const progressBarCompletion = (
+    (testCaseProgress[0] / Math.max(testCaseProgress[1], 1)) *
+    100
+  ).toPrecision(3);
   return (
     <Progress
       progress={parseFloat(progressBarCompletion)}

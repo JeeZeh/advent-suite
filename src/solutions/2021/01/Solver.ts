@@ -30,5 +30,12 @@ export default async function solution(input?: string): Promise<string[]> {
   if (!input) throw Error("Invalid input");
 
   const measurements: number[] = input.split("\n").map((l) => parseInt(l));
-  return [`${partOne(measurements)}`, `${partTwo(measurements)}`];
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve([`${partOne(measurements)}`, `${partTwo(measurements)}`])
+    }, Math.random() * 1000)
+  });
+  
+  // return [`${partOne(measurements)}`, `${partTwo(measurements)}`];
 }

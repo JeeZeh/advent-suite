@@ -5,9 +5,15 @@ import {
   getAggregateEvaluation,
 } from "../inputs/inputs";
 import { ResultIcon } from "./ResultIcon";
-import { useCallback, useRef } from "react";
+import {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import classNames from "classnames";
-import { RunResult } from "../solutions/utils";
+import { LONG_RUNTIME_MS, RunResult } from "../solutions/utils";
 
 /**
  * Given an AggregateEvaluation, returns an array of styles to be applied to the header,
@@ -27,10 +33,11 @@ function getHeaderStyle(evaluation: AggregateEvaluation): string {
 }
 
 interface HeaderTextProps {
-  result: RunResult;
+  name: string;
+  result: RunResult | null;
 }
 
-function HeaderText({ result }: HeaderTextProps) {
+function HeaderText({ name, result }: HeaderTextProps) {
   const headerTextRef = useRef<HTMLHeadingElement>(null);
 
   const headerTitle = (
@@ -46,7 +53,7 @@ function HeaderText({ result }: HeaderTextProps) {
         "whitespace-nowrap"
       )}
     >
-      {result.problemInput.name}
+      {name}
     </h3>
   );
 
@@ -61,20 +68,22 @@ function HeaderText({ result }: HeaderTextProps) {
 
   return (
     <div className={classNames("font-mono", "flex", "gap-2", "items-center")}>
-      <ResultIcon evaluations={result.evaluation} size="md" />
+      <ResultIcon evaluations={result?.evaluation} size="md" />
       <div
         className={classNames("flex", "items-baseline", "gap-2", "select-none")}
       >
         {isEllipsisActive() ? (
-          <Tooltip content={result.problemInput.name} animation="duration-50">
+          <Tooltip content={name} animation="duration-50">
             {headerTitle}
           </Tooltip>
         ) : (
           headerTitle
         )}
-        <p className={classNames("text-xs", "opacity-70")}>
-          {result.runtimeMs.toFixed(2)}ms
-        </p>
+        {result && (
+          <p className={classNames("text-xs", "opacity-70")}>
+            {result.runtimeMs.toFixed(2)}ms
+          </p>
+        )}
       </div>
     </div>
   );
@@ -114,19 +123,31 @@ function PartResult({ label, evaluation, result, expected }: PartResultProps) {
 }
 
 interface ResultDisplayProps {
-  isRunning: boolean;
-  result?: RunResult;
+  name: string;
+  result?: Promise<RunResult>;
 }
-export function ResultDisplay({ isRunning, result }: ResultDisplayProps) {
-  if (isRunning) {
-    return <Spinner />;
-  }
+export function ResultDisplay({ name, result }: ResultDisplayProps) {
+  const [settledResult, setSettledResult] = useState<RunResult | null>(null);
 
-  if (result == null) {
-    return null;
-  }
+  useEffect(() => {
+    if (result) {
+      // Proactively set a timer at which to clear the current settledResult
+      // indicating that the 'new' result has not yet settled, and a spinner should be shown.
+      // TODO: Maybe tidy this into separate states?
+      const longRunTimeout = setTimeout(
+        () => setSettledResult(null),
+        LONG_RUNTIME_MS
+      );
+      result.then((r) => {
+        clearTimeout(longRunTimeout);
+        setSettledResult(r);
+      });
+    }
+  }, [result]);
 
-  const headerTheme = getHeaderStyle(getAggregateEvaluation(result.evaluation));
+  const headerTheme = getHeaderStyle(
+    getAggregateEvaluation(settledResult?.evaluation)
+  );
 
   return (
     <div
@@ -153,28 +174,27 @@ export function ResultDisplay({ isRunning, result }: ResultDisplayProps) {
           headerTheme
         )}
       >
-        <HeaderText result={result} />
+        <HeaderText name={name} result={settledResult} />
       </div>
-      <div
-        className={classNames(
-          "p-4",
-          "flex",
-          "justify-center",
-          "gap-16"
+      <div className={classNames("p-4", "flex", "justify-center", "gap-16")}>
+        {settledResult != null ? (
+          <>
+            <PartResult
+              label="Part 1"
+              evaluation={settledResult.evaluation[0]}
+              expected={settledResult.problemInput.expected.partOne}
+              result={settledResult.answer.partOne}
+            />
+            <PartResult
+              label="Part 2"
+              evaluation={settledResult.evaluation[1]}
+              expected={settledResult.problemInput.expected.partTwo}
+              result={settledResult.answer.partTwo}
+            />{" "}
+          </>
+        ) : (
+          <Spinner />
         )}
-      >
-        <PartResult
-          label="Part 1"
-          evaluation={result.evaluation[0]}
-          expected={result.problemInput.expected.partOne}
-          result={result.answer.partOne}
-        />
-        <PartResult
-          label="Part 2"
-          evaluation={result.evaluation[1]}
-          expected={result.problemInput.expected.partTwo}
-          result={result.answer.partTwo}
-        />
       </div>
     </div>
   );

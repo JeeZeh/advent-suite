@@ -1,106 +1,75 @@
 import { Button, Spinner } from "flowbite-react";
-import { ProblemInput } from "../inputs/inputs";
+import { AnswerEval, ProblemInput } from "../inputs/inputs";
 import { EnumeratedTextDisplay } from "./EnumeratedTextDisplay";
 import * as cs from "classnames";
 import { ResultIcon } from "./ResultIcon";
 import { TabGroup, TabItem } from "./Tabs";
 import ButtonGroup from "flowbite-react/lib/esm/components/Button/ButtonGroup";
-import { RunResult } from "../solutions/utils";
+import { AsyncResult, RunResult } from "../solutions/utils";
+import { useEffect, useState } from "react";
 
-function renderRunButtons(
-  isRunning: boolean,
-  runProblemInputs: (inputs: ProblemInput[]) => void,
-  selectedProblemInput: ProblemInput,
-  problemInputs: ProblemInput[]
-) {
-  return (
-    <div className={cs("flex", "space-x-2")}>
-      <ButtonGroup>
-        <Button
-          color={isRunning ? "info" : "success"}
-          onClick={() => runProblemInputs([selectedProblemInput])}
-        >
-          {isRunning ? (
-            <>
-              <Spinner size="sm" aria-label="Spinner button example" />
-              <span className={cs("pl-3")}>Running...</span>
-            </>
-          ) : (
-            "Run"
-          )}
-        </Button>
-        <Button
-          color={isRunning ? "info" : "light"}
-          onClick={() => runProblemInputs(problemInputs)}
-        >
-          {isRunning ? (
-            <>
-              <Spinner size="sm" aria-label="Spinner button example" />
-              <span className="pl-3">Running...</span>
-            </>
-          ) : (
-            "Run all"
-          )}
-        </Button>
-      </ButtonGroup>
-    </div>
-  );
+interface InputTabProps {
+  problemInput: ProblemInput;
+  result?: Promise<RunResult>;
+  isActive: boolean;
+  setActive: () => void;
 }
+function InputTab({
+  problemInput,
+  result,
+  isActive,
+  setActive,
+}: InputTabProps) {
+  const [evaluation, setEvaluation] = useState<[AnswerEval, AnswerEval]>();
 
-function renderInputTabs(
-  problemInputs: ProblemInput[],
-  runResults: Map<string, RunResult>,
-  selectedProblemInput: ProblemInput,
-  setSelectedProblemInput: (input: ProblemInput) => void
-) {
+  useEffect(() => {
+    if (result) {
+      result.then(
+        (r) => evaluation != r.evaluation && setEvaluation(r.evaluation)
+      );
+    }
+  }, [result]);
+
   return (
-    <TabGroup aria-label="Default tabs">
-      {problemInputs.map((p) => (
-        <TabItem
-          key={`option-${p.name}`}
-          title={
-            <div
-              className={cs("flex", "gap-2", "items-center", "justify-center")}
-            >
-              <div>
-                <ResultIcon
-                  evaluations={runResults.get(p.name)?.evaluation}
-                  useColor
-                  size="md"
-                  className="flex-shrink-0"
-                />
-              </div>
-              <div
-                className={cs(
-                  "text-ellipsis",
-                  "overflow-hidden",
-                  "whitespace-nowrap",
-                  "flex-shrink"
-                )}
-              >
-                {p.name}
-              </div>
-            </div>
-          }
-          ariaLabel={p.name}
-          active={selectedProblemInput?.name == p.name}
-          onClick={() => setSelectedProblemInput(p)}
-        />
-      ))}
-    </TabGroup>
+    <TabItem
+      key={`option-${problemInput.name}`}
+      title={
+        <div className={cs("flex", "gap-2", "items-center", "justify-center")}>
+          <div>
+            <ResultIcon
+              evaluations={evaluation ?? []}
+              useColor
+              size="md"
+              className="flex-shrink-0"
+            />
+          </div>
+          <div
+            className={cs(
+              "text-ellipsis",
+              "overflow-hidden",
+              "whitespace-nowrap",
+              "flex-shrink"
+            )}
+          >
+            {problemInput.name}
+          </div>
+        </div>
+      }
+      ariaLabel={problemInput.name}
+      active={isActive}
+      onClick={setActive}
+    />
   );
 }
 
 interface InputSelectorProps {
-  isRunning: boolean;
   problemInputs: ProblemInput[];
-  runResults: Map<string, RunResult>;
+  runResults: Map<string, Promise<RunResult>>;
   selectedProblemInput: ProblemInput;
   setSelectedProblemInput: (input: ProblemInput) => void;
   runProblemInputs: (inputs: ProblemInput[]) => void;
 }
 function InputSelector({
-  isRunning,
   problemInputs,
   selectedProblemInput,
   setSelectedProblemInput,
@@ -113,12 +82,22 @@ function InputSelector({
         <div
           className={cs("flex", "space-x-4", "items-end", "justify-between")}
         >
-          {renderRunButtons(
-            isRunning,
-            runProblemInputs,
-            selectedProblemInput,
-            problemInputs
-          )}
+          <div className={cs("flex", "space-x-2")}>
+            <ButtonGroup>
+              <Button
+                color="success"
+                onClick={() => runProblemInputs([selectedProblemInput])}
+              >
+                Run
+              </Button>
+              <Button
+                color="light"
+                onClick={() => runProblemInputs(problemInputs)}
+              >
+                Run all
+              </Button>
+            </ButtonGroup>
+          </div>
         </div>
       </div>
       <div
@@ -134,12 +113,20 @@ function InputSelector({
           "dark:divide-gray-600"
         )}
       >
-        {renderInputTabs(
-          problemInputs,
-          runResults,
-          selectedProblemInput,
-          setSelectedProblemInput
-        )}
+        <TabGroup aria-label="Default tabs">
+          {problemInputs.map((p) => (
+            <InputTab
+              problemInput={p}
+              result={runResults.get(p.name)}
+              isActive={selectedProblemInput.name === p.name}
+              setActive={() =>
+                selectedProblemInput.name !== p.name &&
+                setSelectedProblemInput(p)
+              }
+              key={`inputselect-${p.name}`}
+            />
+          ))}
+        </TabGroup>
 
         <div
           className={cs(
