@@ -45,7 +45,9 @@ export const INPUT_INDEX: {
         name: "Real Input",
         data: i2021_01_real,
         isReal: true,
-        expected: {},
+        expected: {
+          partOne: "1564"
+        },
       },
     ],
   },
