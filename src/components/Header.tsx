@@ -1,7 +1,6 @@
 import { DarkThemeToggle, Label, Select } from "flowbite-react";
-import React from "react";
 
-import * as cs from "classnames";
+import classNames from "classnames";
 
 interface IHeaderProps {
   year?: string;
@@ -16,7 +15,7 @@ export function Header(props: IHeaderProps): JSX.Element {
   const { setYear, yearOptions, setDay, dayOptions } = props;
   return (
     <div
-      className={cs(
+      className={classNames(
         "flex",
         "flex-row",
         "items-center",
@@ -34,15 +33,15 @@ export function Header(props: IHeaderProps): JSX.Element {
       )}
     >
       <div>
-        <div className={cs("flex", "flex-row", "space-x-2")}>
-          <p className={cs("text-4xl", "font-bold", "font-mono")}>
-            Advent<span className={cs("text-2xl","opacity-80", "pl-1")}>suite</span>
+        <div className={classNames("flex", "flex-row", "space-x-2")}>
+          <p className={classNames("text-4xl", "font-bold", "font-mono")}>
+            Advent<span className={classNames("text-2xl","opacity-80", "pl-1")}>suite</span>
           </p>
           <DarkThemeToggle />
         </div>
 
       </div>
-      <div className={cs("flex", "flex-row", "gap-2", "items-start")}>
+      <div className={classNames("flex", "flex-row", "gap-2", "items-start")}>
         <div>
           <Label>Year</Label>
           <Select
