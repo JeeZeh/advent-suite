@@ -62,6 +62,35 @@ function InputTab({
   );
 }
 
+interface InputTabsProps {
+  problemInputs: ProblemInput[];
+  runResults: Map<string, Promise<RunResult>>;
+  selectedProblemInput: ProblemInput;
+  setSelectedProblemInput: (input: ProblemInput) => void;
+}
+function InputTabs({
+  problemInputs,
+  runResults,
+  selectedProblemInput,
+  setSelectedProblemInput,
+}: InputTabsProps) {
+  return (
+    <TabGroup aria-label="Default tabs">
+      {problemInputs.map((p) => (
+        <InputTab
+          problemInput={p}
+          result={runResults.get(p.name)}
+          isActive={selectedProblemInput.name === p.name}
+          setActive={() =>
+            selectedProblemInput.name !== p.name && setSelectedProblemInput(p)
+          }
+          key={`inputselect-${p.name}`}
+        />
+      ))}
+    </TabGroup>
+  );
+}
+
 interface InputSelectorProps {
   problemInputs: ProblemInput[];
   runResults: Map<string, Promise<RunResult>>;
@@ -113,21 +142,12 @@ function InputSelector({
           "dark:divide-gray-600"
         )}
       >
-        <TabGroup aria-label="Default tabs">
-          {problemInputs.map((p) => (
-            <InputTab
-              problemInput={p}
-              result={runResults.get(p.name)}
-              isActive={selectedProblemInput.name === p.name}
-              setActive={() =>
-                selectedProblemInput.name !== p.name &&
-                setSelectedProblemInput(p)
-              }
-              key={`inputselect-${p.name}`}
-            />
-          ))}
-        </TabGroup>
-
+        <InputTabs
+          problemInputs={problemInputs}
+          runResults={runResults}
+          selectedProblemInput={selectedProblemInput}
+          setSelectedProblemInput={setSelectedProblemInput}
+        />
         <div
           className={cs(
             "h-64",

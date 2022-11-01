@@ -1,30 +1,38 @@
 import { ReactNode } from "react";
 import * as cs from "classnames";
+import { useHorizontalScroll } from "../hooks/useHorizontalScroll";
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
 
 interface GroupProps {
   children: ReactNode[];
 }
 export function TabGroup({ children }: GroupProps) {
+  const scrollableRef = useHorizontalScroll();
   return (
-    <ul
-      className={cs(
-        "flex",
-        "text-sm",
-        "font-medium",
-        "text-center",
-        "text-gray-500",
-        "rounded-t-md",
-        "divide-x",
-        "divide-gray-200",
-        "dark:divide-gray-700",
-        "dark:text-gray-400",
-        "bg-gray-200",
-        "overflow-hidden",
-        "overflow-x-auto"
-      )}
+    <SimpleBar
+      autoHide={false}
+      style={{ overflowY: "hidden" }}
+      scrollableNodeProps={{ ref: scrollableRef }}
     >
-      {children}
-    </ul>
+      <ul
+        className={cs(
+          "flex",
+          "text-sm",
+          "font-medium",
+          "text-center",
+          "text-gray-500",
+          "rounded-t-md",
+          "divide-x",
+          "divide-gray-200",
+          "dark:divide-gray-700",
+          "dark:text-gray-400",
+          "bg-gray-200"
+        )}
+      >
+        {children}
+      </ul>
+    </SimpleBar>
   );
 }
 
