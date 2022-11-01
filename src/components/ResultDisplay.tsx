@@ -216,6 +216,7 @@ export function ResultDisplay({
             />{" "}
           </>
         ) : (
+          // TODO: Make this overlay the previous results so they're always visible
           <Spinner />
         )}
       </div>

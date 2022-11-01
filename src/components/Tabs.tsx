@@ -11,7 +11,7 @@ export function TabGroup({ children }: GroupProps) {
   const scrollableRef = useHorizontalScroll();
   return (
     <SimpleBar
-      autoHide={false}
+      autoHide={true}
       style={{ overflowY: "hidden" }}
       scrollableNodeProps={{ ref: scrollableRef }}
     >

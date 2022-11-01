@@ -20,17 +20,22 @@ export function Landing() {
   const [runResults, setRunResults] = useState(
     new Map<string, Promise<RunResult>>()
   );
+  const [lastRunInputs, setLastRunInputs] = useState<ProblemInput[]>([]);
 
   const yearOptions = useMemo(() => getYearOptions(), []);
   const dayOptions = useMemo(() => getDayOptions(year), [year]);
   const problemInputs = useMemo(() => getProblemInputs(year, day), [year, day]);
 
   const runProblemInputs = (problemInputs: ProblemInput[]) => {
+    if (problemInputs.length == 0) {
+      return;
+    }
+
     const newResults = new Map(runResults);
     problemInputs.forEach((p) =>
       newResults.set(p.name, runSolution(year, day, p))
     );
-
+    setLastRunInputs(problemInputs);
     setRunResults(newResults);
   };
 
@@ -76,6 +81,7 @@ export function Landing() {
             <ResultContainer
               problemInputs={problemInputs}
               runResults={runResults}
+              triggerRerun={() => runProblemInputs(lastRunInputs)}
               setSelectedProblemInput={setSelectedProblemInput}
             />
           )}

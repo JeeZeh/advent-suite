@@ -45,7 +45,6 @@ export function Header(props: IHeaderProps): JSX.Element {
         <div>
           <Label>Year</Label>
           <Select
-            title="test"
             sizing="base"
             onChange={(e) => setYear(e.target.value)}
           >
@@ -59,7 +58,6 @@ export function Header(props: IHeaderProps): JSX.Element {
         <div>
           <Label>Day</Label>
           <Select
-            title="test"
             sizing="base"
             onChange={(e) => setDay(e.target.value)}
           >
