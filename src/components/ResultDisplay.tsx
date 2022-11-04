@@ -1,19 +1,18 @@
-import { Badge, BadgeColors, Spinner, Tooltip } from "flowbite-react";
+import { Spinner, Tooltip } from "flowbite-react";
 import {
   AggregateEvaluation,
   AnswerEval,
   getAggregateEvaluation,
 } from "../inputs/inputs";
 import { ResultIcon } from "./ResultIcon";
-import {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import { LONG_RUNTIME_MS, RunResult } from "../solutions/utils";
+import {
+  getLocalTheme,
+  LONG_RUNTIME_MS,
+  RunResult,
+  toast,
+} from "../solutions/utils";
 
 /**
  * Given an AggregateEvaluation, returns an array of styles to be applied to the header,
@@ -110,6 +109,26 @@ function PartResult({ label, evaluation, result, expected }: PartResultProps) {
     </div>
   );
 
+  const getCodeTheme = () => {
+    return getLocalTheme() === "dark"
+      ? ["bg-slate-700", "text-orange-300"]
+      : ["bg-slate-100", "text-orange-800"];
+  };
+
+  const copyResultToClipboard = () => {
+    navigator.clipboard.writeText(result).then(() =>
+      toast(
+        <div>
+          Copied answer
+          <code className={classNames("mx-1", "px-1", getCodeTheme())}>
+            {result}
+          </code>
+          to clipboard
+        </div>
+      )
+    );
+  };
+
   return (
     <Tooltip content={tooltip} animation="duration-50">
       <div
@@ -121,7 +140,7 @@ function PartResult({ label, evaluation, result, expected }: PartResultProps) {
           "cursor-pointer",
           "select-none"
         )}
-        onClick={() => navigator.clipboard.writeText(result)}
+        onClick={copyResultToClipboard}
       >
         <div>
           <ResultIcon evaluations={evaluation} size="md" useColor />

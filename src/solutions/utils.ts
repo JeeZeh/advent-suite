@@ -1,4 +1,10 @@
 import {
+  ToastContent,
+  ToastOptions,
+  ToastProps,
+} from "react-toastify/dist/types";
+import { toast as _toast } from "react-toastify";
+import {
   AggregateEvaluation,
   Answer,
   AnswerEval,
@@ -52,3 +58,22 @@ export async function runSolution(
 }
 
 export const LONG_RUNTIME_MS = 100;
+
+export function getLocalTheme(): "dark" | "light" {
+  const item = localStorage.getItem("theme");
+
+  if (item === "dark") {
+    return "dark";
+  }
+
+  return "light";
+}
+
+export const toast = (content: ToastContent, options?: ToastOptions) => {
+  const defaultOptions: ToastOptions = {
+    theme: getLocalTheme(),
+    ...options,
+  };
+
+  return _toast(content, defaultOptions);
+};
