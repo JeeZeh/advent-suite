@@ -1,5 +1,7 @@
 import i2021_01_ex from "./2021/01/example";
 import i2021_01_real from "./2021/01/real";
+import i2021_02_ex from "./2021/02/example";
+import i2021_02_real from "./2021/02/real";
 
 export type Answer = {
   partOne: string;
@@ -46,7 +48,25 @@ export const problemInputs: {
         data: i2021_01_real,
         isReal: true,
         expected: {
-          partOne: "1564"
+          partOne: "1564",
+        },
+      },
+    ],
+    "02": [
+      {
+        name: "Example",
+        data: i2021_02_ex,
+        expected: {
+          partOne: "150",
+          partTwo: "900",
+        },
+      },
+      {
+        name: "Real",
+        data: i2021_02_real,
+        isReal: true,
+        expected: {
+          partOne: "2070300",
         },
       },
     ],
