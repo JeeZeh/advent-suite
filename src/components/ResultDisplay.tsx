@@ -92,16 +92,24 @@ function HeaderText({ name, result }: HeaderTextProps) {
 interface PartResultProps {
   label: string;
   evaluation: AnswerEval;
-  result?: string;
+  result: string;
   expected?: string;
 }
 function PartResult({ label, evaluation, result, expected }: PartResultProps) {
   const tooltip = (
-    <div>
-      <p>Expected: {expected ?? "?"}</p>
-      <p>Result: {result ?? "?"}</p>
+    <div className={classNames("flex", "flex-col", "gap-2")}>
+      <div>
+        <p>Expected: {expected ?? "?"}</p>
+        <p>Result: {result ?? "?"}</p>
+      </div>
+      <p
+        className={classNames("text-xs", "italic", "opacity-75", "self-center")}
+      >
+        Click to copy
+      </p>
     </div>
   );
+
   return (
     <Tooltip content={tooltip} animation="duration-50">
       <div
@@ -110,8 +118,10 @@ function PartResult({ label, evaluation, result, expected }: PartResultProps) {
           "flex",
           "gap-2",
           "items-center",
-          "cursor-default"
+          "cursor-pointer",
+          "select-none"
         )}
+        onClick={() => navigator.clipboard.writeText(result)}
       >
         <div>
           <ResultIcon evaluations={evaluation} size="md" useColor />
@@ -213,7 +223,7 @@ export function ResultDisplay({
               evaluation={settledResult.evaluation[1]}
               expected={settledResult.problemInput.expected.partTwo}
               result={settledResult.answer.partTwo}
-            />{" "}
+            />
           </>
         ) : (
           // TODO: Make this overlay the previous results so they're always visible

@@ -2,15 +2,15 @@ import i2021_01_ex from "./2021/01/example";
 import i2021_01_real from "./2021/01/real";
 
 export type Answer = {
-  partOne?: string;
-  partTwo?: string;
+  partOne: string;
+  partTwo: string;
 };
 
 export type ProblemInput = {
   name: string;
   data: string;
   isReal?: boolean;
-  expected: Answer;
+  expected: Partial<Answer>;
 };
 export const problemInputs: {
   [key: string]: { [key: string]: ProblemInput[] };
@@ -88,8 +88,8 @@ export enum AnswerEval {
 }
 
 export function evaluateRunResult(
-  expected: Answer,
-  result: Answer
+  result: Answer,
+  expected: Partial<Answer>
 ): [AnswerEval, AnswerEval] {
   const answers = [AnswerEval.Incomplete, AnswerEval.Incomplete];
 
