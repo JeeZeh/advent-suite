@@ -12,7 +12,7 @@ export type ProblemInput = {
   isReal?: boolean;
   expected: Answer;
 };
-export const INPUT_INDEX: {
+export const problemInputs: {
   [key: string]: { [key: string]: ProblemInput[] };
 } = {
   "2021": {
@@ -54,11 +54,22 @@ export const INPUT_INDEX: {
 };
 
 export function getYearOptions(): string[] {
-  return Object.keys(INPUT_INDEX);
+  return Object.keys(problemInputs);
 }
 
 export function getDayOptions(year: string): string[] {
-  return Object.keys(INPUT_INDEX[year] ?? {});
+  return Object.keys(problemInputs[year] ?? {});
+}
+
+export type Problem = {
+  year: string;
+  day: string;
+};
+export function getDefaultProblem(): Problem {
+  const year = getYearOptions()[0];
+  const day = getDayOptions(year)[0];
+
+  return { year, day };
 }
 
 export function getProblemInputs(
@@ -67,7 +78,7 @@ export function getProblemInputs(
 ): ProblemInput[] {
   if (!year || !day) return [];
 
-  return (INPUT_INDEX[year] ?? {})[day] ?? [];
+  return (problemInputs[year] ?? {})[day] ?? [];
 }
 
 export enum AnswerEval {

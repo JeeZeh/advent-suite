@@ -2,8 +2,10 @@ import { useCallback, useMemo, useState } from "react";
 import { Header } from "../components/Header";
 import {
   getDayOptions,
+  getDefaultProblem,
   getProblemInputs,
   getYearOptions,
+  Problem,
   ProblemInput,
 } from "../inputs/inputs";
 
@@ -13,18 +15,15 @@ import { RunResult, runSolution } from "../solutions/utils";
 import classNames from "classnames";
 
 export function Landing() {
-  const [year, setYear] = useState<string>(getYearOptions()[0]);
-  const [day, setDay] = useState<string>(getDayOptions(year)[0]);
+  const [problem, setProblem] = useState<Problem>(getDefaultProblem());
   const [selectedProblemInput, setSelectedProblemInput] =
-    useState<ProblemInput>(getProblemInputs(year, day)[0]);
+    useState<ProblemInput>(getProblemInputs(problem.year, problem.day)[0]);
   const [runResults, setRunResults] = useState(
     new Map<string, Promise<RunResult>>()
   );
   const [lastRunInputs, setLastRunInputs] = useState<ProblemInput[]>([]);
 
-  const yearOptions = useMemo(() => getYearOptions(), []);
-  const dayOptions = useMemo(() => getDayOptions(year), [year]);
-  const problemInputs = useMemo(() => getProblemInputs(year, day), [year, day]);
+  const problemInputs = getProblemInputs(problem.year, problem.day);
 
   const runProblemInputs = (problemInputs: ProblemInput[]) => {
     if (problemInputs.length == 0) {
@@ -33,10 +32,24 @@ export function Landing() {
 
     const newResults = new Map(runResults);
     problemInputs.forEach((p) =>
-      newResults.set(p.name, runSolution(year, day, p))
+      newResults.set(p.name, runSolution(problem.year, problem.day, p))
     );
     setLastRunInputs(problemInputs);
     setRunResults(newResults);
+  };
+
+  // When a new problem is set, make sure it's actually changed
+  // and if so:
+  // 1. clear the run results
+  // 2. set the new default problem input
+  const updateProblem = (newProblem: Problem) => {
+    if (problem.year !== newProblem.year || problem.day != newProblem.day) {
+      setProblem(newProblem);
+      setRunResults(new Map());
+      setSelectedProblemInput(
+        getProblemInputs(newProblem.year, newProblem.day)[0]
+      );
+    }
   };
 
   return (
@@ -52,14 +65,7 @@ export function Landing() {
       )}
     >
       <div className={classNames("flex", "flex-col", "items-center", "w-2/3")}>
-        <Header
-          year={year}
-          yearOptions={yearOptions}
-          setYear={setYear}
-          day={day}
-          dayOptions={dayOptions}
-          setDay={setDay}
-        />
+        <Header problem={problem} setProblem={updateProblem} />
         <div
           className={classNames(
             "flex",
