@@ -29,7 +29,6 @@ function partTwo(commands: Input[]): number {
     } else {
       aim -= amt;
     }
-    console.log("Aim is now", aim, "Depth is now", y);
   }
 
   return x * y;
