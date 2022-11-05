@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Landing from "./layouts/Landing";
 
-function App() {
+function App() {  
   return (
     <Flowbite>
       <Landing />

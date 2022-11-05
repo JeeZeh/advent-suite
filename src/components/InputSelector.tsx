@@ -1,7 +1,7 @@
-import { Button, Spinner } from "flowbite-react";
+import { Button, Spinner, ToggleSwitch } from "flowbite-react";
 import { AnswerEval, ProblemInput } from "../inputs/inputs";
 import { EnumeratedTextDisplay } from "./EnumeratedTextDisplay";
-import * as cs from "classnames";
+import classNames, * as cs from "classnames";
 import { ResultIcon } from "./ResultIcon";
 import { TabGroup, TabItem } from "./Tabs";
 import ButtonGroup from "flowbite-react/lib/esm/components/Button/ButtonGroup";
@@ -95,6 +95,8 @@ interface InputSelectorProps {
   problemInputs: ProblemInput[];
   runResults: Map<string, Promise<RunResult>>;
   selectedProblemInput: ProblemInput;
+  runOnSave: boolean;
+  setRunOnSave: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedProblemInput: (input: ProblemInput) => void;
   runProblemInputs: (inputs: ProblemInput[]) => void;
 }
@@ -104,6 +106,8 @@ function InputSelector({
   setSelectedProblemInput,
   runResults,
   runProblemInputs,
+  runOnSave,
+  setRunOnSave,
 }: InputSelectorProps) {
   return (
     <>
@@ -111,7 +115,7 @@ function InputSelector({
         <div
           className={cs("flex", "space-x-4", "items-end", "justify-between")}
         >
-          <div className={cs("flex", "space-x-2")}>
+          <div className={cs("flex", "items-center", "gap-4")}>
             <ButtonGroup>
               <Button
                 color="success"
@@ -126,6 +130,13 @@ function InputSelector({
                 Run all
               </Button>
             </ButtonGroup>
+            <div className={classNames("flex", "flex-col", "gap-1")}>
+              <ToggleSwitch
+                checked={runOnSave}
+                label="Run on save"
+                onChange={() => setRunOnSave((toggle) => !toggle)}
+              />
+            </div>
           </div>
         </div>
       </div>

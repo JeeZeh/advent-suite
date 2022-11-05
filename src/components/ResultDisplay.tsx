@@ -124,7 +124,8 @@ function PartResult({ label, evaluation, result, expected }: PartResultProps) {
             {result}
           </code>
           to clipboard
-        </div>
+        </div>,
+        { autoClose: 3000 }
       )
     );
   };

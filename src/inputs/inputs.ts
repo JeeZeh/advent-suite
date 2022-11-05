@@ -67,6 +67,7 @@ export const problemInputs: {
         isReal: true,
         expected: {
           partOne: "2070300",
+          partTwo: "2078985210",
         },
       },
     ],

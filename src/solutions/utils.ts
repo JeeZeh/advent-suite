@@ -1,9 +1,5 @@
-import {
-  ToastContent,
-  ToastOptions,
-  ToastProps,
-} from "react-toastify/dist/types";
-import { toast as _toast } from "react-toastify";
+import { ToastContent, ToastOptions } from "react-toastify/dist/types";
+import { Flip, toast as _toast } from "react-toastify";
 import {
   AggregateEvaluation,
   Answer,
@@ -72,6 +68,9 @@ export function getLocalTheme(): "dark" | "light" {
 export const toast = (content: ToastContent, options?: ToastOptions) => {
   const defaultOptions: ToastOptions = {
     theme: getLocalTheme(),
+    pauseOnFocusLoss: false,
+    hideProgressBar: true,
+    transition: Flip,
     ...options,
   };
 

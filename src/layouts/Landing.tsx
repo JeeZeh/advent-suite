@@ -1,17 +1,15 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import {
-  getDayOptions,
   getDefaultProblem,
   getProblemInputs,
-  getYearOptions,
   Problem,
   ProblemInput,
 } from "../inputs/inputs";
 
 import { ResultContainer } from "../components/ResultsContainer";
 import InputSelector from "../components/InputSelector";
-import { RunResult, runSolution } from "../solutions/utils";
+import { RunResult, runSolution, toast } from "../solutions/utils";
 import classNames from "classnames";
 
 export function Landing() {
@@ -22,8 +20,23 @@ export function Landing() {
     new Map<string, Promise<RunResult>>()
   );
   const [lastRunInputs, setLastRunInputs] = useState<ProblemInput[]>([]);
+  const [runOnSave, setRunOnSave] = useState(false);
 
   const problemInputs = getProblemInputs(problem.year, problem.day);
+
+  const rerunProblemInputs = useCallback(() => {
+    if (runOnSave && lastRunInputs.length > 0) {
+      runProblemInputs(lastRunInputs);
+      toast(
+        `Re-ran ${lastRunInputs.length} input${
+          lastRunInputs.length > 1 ? "s" : ""
+        }`,
+        { autoClose: 1000, hideProgressBar: true }
+      );
+    }
+  }, [runOnSave, lastRunInputs]);
+
+  useEffect(() => rerunProblemInputs(), []);
 
   const runProblemInputs = (problemInputs: ProblemInput[]) => {
     if (problemInputs.length == 0) {
@@ -40,12 +53,13 @@ export function Landing() {
 
   // When a new problem is set, make sure it's actually changed
   // and if so:
-  // 1. clear the run results
-  // 2. set the new default problem input
+  // 1. Clear the run results
+  // 2. Set the new default problem input
   const updateProblem = (newProblem: Problem) => {
     if (problem.year !== newProblem.year || problem.day != newProblem.day) {
       setProblem(newProblem);
       setRunResults(new Map());
+      setLastRunInputs([]);
       setSelectedProblemInput(
         getProblemInputs(newProblem.year, newProblem.day)[0]
       );
@@ -64,7 +78,15 @@ export function Landing() {
         "items-center"
       )}
     >
-      <div className={classNames("flex", "flex-col", "items-center", "w-2/3")}>
+      <div
+        className={classNames(
+          "flex",
+          "flex-col",
+          "items-center",
+          "w-3/4",
+          "max-w-7xl"
+        )}
+      >
         <Header problem={problem} setProblem={updateProblem} />
         <div
           className={classNames(
@@ -81,13 +103,14 @@ export function Landing() {
             runResults={runResults}
             selectedProblemInput={selectedProblemInput}
             setSelectedProblemInput={setSelectedProblemInput}
+            runOnSave={runOnSave}
+            setRunOnSave={setRunOnSave}
             runProblemInputs={runProblemInputs}
           />
           {runResults.size > 0 && (
             <ResultContainer
               problemInputs={problemInputs}
               runResults={runResults}
-              triggerRerun={() => runProblemInputs(lastRunInputs)}
               setSelectedProblemInput={setSelectedProblemInput}
             />
           )}
