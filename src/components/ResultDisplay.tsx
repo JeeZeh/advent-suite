@@ -21,13 +21,13 @@ import {
 function getHeaderStyle(evaluation: AggregateEvaluation): string {
   switch (evaluation) {
     case AggregateEvaluation.AllCorrect:
-      return classNames("border-green-400");
+      return classNames("border-green-600", "dark:border-green-400");
     case AggregateEvaluation.PartialCorrect:
-      return classNames("border-yellow-400", "dark:border-yellow-300");
+      return classNames("border-yellow-400", "dark:border-yellow-400");
     case AggregateEvaluation.AllIncorrect:
-      return classNames("border-red-400");
+      return classNames("border-red-600", "dark:border-red-500");
     default:
-      return classNames("border-gray-400");
+      return classNames("border-gray-600");
   }
 }
 

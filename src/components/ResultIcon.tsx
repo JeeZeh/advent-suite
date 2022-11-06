@@ -10,6 +10,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 import classNames from "classnames";
+import { getEvaluationColor } from "../solutions/utils";
 
 /**
  * Given an AggregateEvaluation, returns an appropriate SVG icon to be used
@@ -27,23 +28,6 @@ function getIcon(
       return XCircleIcon;
     default:
       return EllipsisHorizontalCircleIcon;
-  }
-}
-
-/**
-* Given an AggregateEvaluation, returns an appropriate color to be used
-* for the ResultIcon, if useColor is provided.
-*/
-function getColor(evaluation: AggregateEvaluation): string {
-  switch (evaluation) {
-    case AggregateEvaluation.AllCorrect:
-      return classNames("fill-green-500", "dark:fill-green-400");
-    case AggregateEvaluation.PartialCorrect:
-      return classNames("fill-yellow-400", "dark:fill-yellow-300");
-    case AggregateEvaluation.AllIncorrect:
-      return classNames("fill-red-500", "dark:fill-red-400");
-    default:
-      return "";
   }
 }
 
@@ -74,7 +58,7 @@ export function ResultIcon(props: ResultIconProps) {
 
   // Apply color to the icon conditionally
   if (props.useColor) {
-    determinedClasses.push(getColor(aggregateEvaluation));
+    determinedClasses.push(getEvaluationColor(aggregateEvaluation));
   }
 
   determinedClasses.push(iconSizes[props.size ?? "md"]);

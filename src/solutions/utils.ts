@@ -8,6 +8,7 @@ import {
   getAggregateEvaluation,
   ProblemInput,
 } from "../inputs/inputs";
+import classNames from "classnames";
 
 export type RunResult = {
   problemInput: ProblemInput;
@@ -76,3 +77,20 @@ export const toast = (content: ToastContent, options?: ToastOptions) => {
 
   return _toast(content, defaultOptions);
 };
+
+/**
+ * Given an AggregateEvaluation, returns an appropriate color to be used
+ * for the ResultIcon, if useColor is provided.
+ */
+export function getEvaluationColor(evaluation: AggregateEvaluation): string {
+  switch (evaluation) {
+    case AggregateEvaluation.AllCorrect:
+      return classNames("fill-green-600", "dark:fill-green-400");
+    case AggregateEvaluation.PartialCorrect:
+      return classNames("fill-yellow-400", "dark:fill-yellow-300");
+    case AggregateEvaluation.AllIncorrect:
+      return classNames("fill-red-600", "dark:fill-red-500");
+    default:
+      return "";
+  }
+}
