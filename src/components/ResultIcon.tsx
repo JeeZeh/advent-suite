@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import { getEvaluationColor } from "../solutions/utils";
+import { useEffect, useState } from "react";
 
 /**
  * Given an AggregateEvaluation, returns an appropriate SVG icon to be used
@@ -64,4 +65,35 @@ export function ResultIcon(props: ResultIconProps) {
   determinedClasses.push(iconSizes[props.size ?? "md"]);
 
   return <Icon {...otherSvgProps} className={classNames(determinedClasses)} />;
+}
+
+export function AsyncResultIcon(
+  props: Omit<ResultIconProps, "evaluations"> & {
+    evaluations?: Promise<AnswerEval[] | AnswerEval>;
+  }
+) {
+  const [resolvedEvaluation, setResolvedEvaluation] = useState<
+    AnswerEval[] | AnswerEval
+  >();
+
+  useEffect(() => {
+    if (props.evaluations) {
+      props.evaluations.then(
+        (r) => resolvedEvaluation != r && setResolvedEvaluation(r)
+      );
+    }
+  }, [props.evaluations]);
+
+  const newProps: ResultIconProps = {
+    ...props,
+    evaluations: AnswerEval.Incomplete,
+  };
+
+  if (!resolvedEvaluation) {
+    return <ResultIcon {...newProps} />;
+  }
+
+  newProps.evaluations = resolvedEvaluation;
+
+  return <ResultIcon {...newProps} />;
 }

@@ -2,7 +2,7 @@ import { Button, Spinner, ToggleSwitch } from "flowbite-react";
 import { AnswerEval, ProblemInput } from "../inputs/inputs";
 import { EnumeratedTextDisplay } from "./EnumeratedTextDisplay";
 import classNames, * as cs from "classnames";
-import { ResultIcon } from "./ResultIcon";
+import { AsyncResultIcon, ResultIcon } from "./ResultIcon";
 import { TabGroup, TabItem } from "./Tabs";
 import ButtonGroup from "flowbite-react/lib/esm/components/Button/ButtonGroup";
 import { RunResult } from "../solutions/utils";
@@ -20,24 +20,14 @@ function InputTab({
   isActive,
   setActive,
 }: InputTabProps) {
-  const [evaluation, setEvaluation] = useState<[AnswerEval, AnswerEval]>();
-
-  useEffect(() => {
-    if (result) {
-      result.then(
-        (r) => evaluation != r.evaluation && setEvaluation(r.evaluation)
-      );
-    }
-  }, [result]);
-
   return (
     <TabItem
       key={`option-${problemInput.name}`}
       title={
         <div className={cs("flex", "gap-2", "items-center", "justify-center")}>
           <div>
-            <ResultIcon
-              evaluations={evaluation ?? []}
+            <AsyncResultIcon
+              evaluations={result?.then((res) => res.evaluation)}
               useColor
               size="md"
               className="flex-shrink-0"
