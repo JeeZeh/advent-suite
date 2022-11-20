@@ -1,22 +1,15 @@
 import { ToastContent, ToastOptions } from "react-toastify/dist/types";
 import { Flip, toast as _toast } from "react-toastify";
+import { evaluateRunResult, getAggregateEvaluation } from "./inputs";
+import classNames from "classnames";
 import {
   AggregateEvaluation,
-  Answer,
-  AnswerEval,
-  evaluateRunResult,
-  getAggregateEvaluation,
+  AocDay,
+  AocYear,
   ProblemInput,
-} from "../inputs/inputs";
-import classNames from "classnames";
-
-export type RunResult = {
-  problemInput: ProblemInput;
-  answer: Answer;
-  runtimeMs: number;
-  evaluation: [AnswerEval, AnswerEval];
-  aggregateEvaluation: AggregateEvaluation;
-};
+  RunResult,
+  SolutionRunner,
+} from "./types";
 
 type SolverModule = {
   default: (input?: string) => Promise<any[]>;
@@ -33,17 +26,16 @@ type SolverModule = {
  * running the given input, resolving when the solution is finished running.
  */
 export async function runSolution(
-  year: string,
-  day: string,
+  year: AocYear,
+  day: AocDay,
   input: ProblemInput
 ): Promise<RunResult> {
-  const module: SolverModule = await import(
-    /* @vite-ignore */ `../solutions/${year}/${day}/Solver.ts`
-  );
+  const run: SolutionRunner = (
+    await import(/* @vite-ignore */ `../problems/${year}/${day}/solution.ts`)
+  ).default;
   const start = window.performance.now();
-  const [partOne, partTwo] = await module.default(input.data);
+  const answer = await run(input.data);
   const runtimeMs = window.performance.now() - start;
-  const answer = { partOne, partTwo };
   const evaluation = evaluateRunResult(answer, input.expected);
   return {
     problemInput: input,

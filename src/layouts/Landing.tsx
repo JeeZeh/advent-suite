@@ -5,11 +5,11 @@ import {
   getProblemInputs,
   Problem,
   ProblemInput,
-} from "../inputs/inputs";
+} from "../lib/inputs";
 
 import { ResultContainer } from "../components/ResultsContainer";
 import InputSelector from "../components/InputSelector";
-import { RunResult, runSolution, toast } from "../solutions/utils";
+import { RunResult, runSolution, toast } from "../lib/utils";
 import classNames from "classnames";
 
 export function Landing() {

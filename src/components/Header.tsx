@@ -1,8 +1,9 @@
 import { DarkThemeToggle, Label, Select } from "flowbite-react";
 
 import classNames from "classnames";
-import { getDayOptions, getYearOptions, Problem } from "../inputs/inputs";
+import { getDayOptions, getYearOptions } from "../lib/inputs";
 import { useEffect, useState } from "react";
+import { AocDay, AocYear, Problem } from "../lib/types";
 
 interface IHeaderProps {
   problem: Problem;
@@ -14,8 +15,8 @@ export function Header(props: IHeaderProps): JSX.Element {
   const [year, setYear] = useState(problem.year);
   const [day, setDay] = useState(problem.day);
 
-  const updateYear = (newYear: string) => {
-    setYear((previousYear: string) => {
+  const updateYear = (newYear: AocYear) => {
+    setYear((previousYear: AocYear) => {
       if (previousYear !== year) {
         const newDay = getDayOptions(year)[0];
         setDay(newDay);
@@ -64,7 +65,10 @@ export function Header(props: IHeaderProps): JSX.Element {
       <div className={classNames("flex", "flex-row", "gap-2", "items-start")}>
         <div>
           <Label>Year</Label>
-          <Select sizing="base" onChange={(e) => setYear(e.target.value)}>
+          <Select
+            sizing="base"
+            onChange={(e) => setYear(e.target.value as AocYear)}
+          >
             {getYearOptions().map((o) => (
               <option key={`option-${o}`} value={o}>
                 {o}
@@ -74,7 +78,11 @@ export function Header(props: IHeaderProps): JSX.Element {
         </div>
         <div>
           <Label>Day</Label>
-          <Select sizing="base" onChange={(e) => setDay(e.target.value)}>
+          {/* TODO: Improve typing of value to be explicitly AocYear and AocDay */}
+          <Select
+            sizing="base"
+            onChange={(e) => setDay(e.target.value as AocDay)}
+          >
             {getDayOptions(problem.year).map((o) => (
               <option key={`option-${o}`} value={o}>
                 {o}

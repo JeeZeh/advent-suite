@@ -1,4 +1,6 @@
-function partOne(measurements: number[]): number {
+import { SolutionRunner } from "../../../lib/types";
+
+function partOne(measurements: number[]): string {
   let count = 0;
   let last = measurements[0];
   for (const num of measurements.slice(1)) {
@@ -8,10 +10,10 @@ function partOne(measurements: number[]): number {
     last = num;
   }
 
-  return count;
+  return `${count}`;
 }
 
-function partTwo(measurements: number[]): number {
+function partTwo(measurements: number[]): string {
   let count = 0;
   let last = measurements.slice(0, 3).reduce((a, b) => a + b, 0);
 
@@ -23,19 +25,15 @@ function partTwo(measurements: number[]): number {
     last = sum;
   }
 
-  return count;
+  return `${count}`;
 }
 
-export default async function solution(input?: string): Promise<string[]> {
+const run: SolutionRunner = async (input?: string) => {
   if (!input) throw Error("Invalid input");
 
   const measurements: number[] = input.split("\n").map((l) => parseInt(l));
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve([`${partOne(measurements)}`, `${partTwo(measurements)}`])
-    }, Math.random() * 1000)
-  });
-  
-  // return [`${partOne(measurements)}`, `${partTwo(measurements)}`];
-}
+  return { partOne: partOne(measurements), partTwo: partTwo(measurements) };
+};
+
+export default run;

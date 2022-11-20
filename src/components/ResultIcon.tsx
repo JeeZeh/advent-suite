@@ -1,8 +1,6 @@
 import {
-  AggregateEvaluation,
-  AnswerEval,
   getAggregateEvaluation,
-} from "../inputs/inputs";
+} from "../lib/inputs";
 import {
   CheckCircleIcon,
   EllipsisHorizontalCircleIcon,
@@ -10,8 +8,9 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 import classNames from "classnames";
-import { getEvaluationColor } from "../solutions/utils";
+import { getEvaluationColor } from "../lib/utils";
 import { useEffect, useState } from "react";
+import { AggregateEvaluation, AnswerEval } from "../lib/types";
 
 /**
  * Given an AggregateEvaluation, returns an appropriate SVG icon to be used

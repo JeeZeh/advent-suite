@@ -1,4 +1,6 @@
-export default `151
+import { ProblemInput } from "../../../lib/types";
+
+const data = `151
 152
 153
 158
@@ -1998,3 +2000,12 @@ export default `151
 8081
 8112
 8127`;
+
+export default {
+  name: "Real Input",
+  data,
+  isReal: true,
+  expected: {
+    partOne: "1564",
+  },
+} as ProblemInput;

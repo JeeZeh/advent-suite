@@ -1,4 +1,6 @@
-function partOne(commands: Input[]): number {
+import { SolutionRunner } from "../../../lib/types";
+
+function partOne(commands: Input[]): string {
   let x = 0;
   let y = 0;
 
@@ -12,10 +14,10 @@ function partOne(commands: Input[]): number {
     }
   }
 
-  return x * y;
+  return `${x * y}`;
 }
 
-function partTwo(commands: Input[]): number {
+function partTwo(commands: Input[]): string {
   let x = 0;
   let y = 0;
   let aim = 0;
@@ -31,7 +33,7 @@ function partTwo(commands: Input[]): number {
     }
   }
 
-  return x * y;
+  return `${x * y}`;
 }
 
 enum Direction {
@@ -55,10 +57,15 @@ function parseLine(line: string): Input {
   return [dir, parseInt(_amt)];
 }
 
-export default async function solution(input?: string): Promise<string[]> {
+const run: SolutionRunner = async (input) => {
   if (!input) throw Error("Invalid input");
 
   const measurements: Input[] = input.split("\n").map((l) => parseLine(l));
 
-  return [`${partOne(measurements)}`, `${partTwo(measurements)}`];
-}
+  return {
+    partOne: partOne(measurements),
+    partTwo: partTwo(measurements),
+  };
+};
+
+export default run;

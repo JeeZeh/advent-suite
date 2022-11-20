@@ -1,12 +1,11 @@
 import { Button, Spinner, ToggleSwitch } from "flowbite-react";
-import { AnswerEval, ProblemInput } from "../inputs/inputs";
 import { EnumeratedTextDisplay } from "./EnumeratedTextDisplay";
 import classNames, * as cs from "classnames";
 import { AsyncResultIcon, ResultIcon } from "./ResultIcon";
 import { TabGroup, TabItem } from "./Tabs";
 import ButtonGroup from "flowbite-react/lib/esm/components/Button/ButtonGroup";
-import { RunResult } from "../solutions/utils";
 import { useEffect, useState } from "react";
+import { ProblemInput, RunResult } from "../lib/types";
 
 interface InputTabProps {
   problemInput: ProblemInput;

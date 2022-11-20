@@ -1,7 +1,6 @@
 import { Progress } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { AnswerEval } from "../inputs/inputs";
-import { RunResult } from "../solutions/utils";
+import { RunResult, AnswerEval } from "../lib/types";
 
 function getTestCaseProgress(results: RunResult[]): [number, number] {
   let upperBoundSuccess = 0;

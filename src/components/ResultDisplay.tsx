@@ -1,18 +1,10 @@
 import { Spinner, Tooltip } from "flowbite-react";
-import {
-  AggregateEvaluation,
-  AnswerEval,
-  getAggregateEvaluation,
-} from "../inputs/inputs";
+import { getAggregateEvaluation } from "../lib/inputs";
 import { ResultIcon } from "./ResultIcon";
 import { useCallback, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import {
-  getLocalTheme,
-  LONG_RUNTIME_MS,
-  RunResult,
-  toast,
-} from "../solutions/utils";
+import { getLocalTheme, LONG_RUNTIME_MS, toast } from "../lib/utils";
+import { AggregateEvaluation, RunResult, AnswerEval } from "../lib/types";
 
 /**
  * Given an AggregateEvaluation, returns an array of styles to be applied to the header,
@@ -91,7 +83,7 @@ function HeaderText({ name, result }: HeaderTextProps) {
 interface PartResultProps {
   label: string;
   evaluation: AnswerEval;
-  result: string;
+  result?: string;
   expected?: string;
 }
 function PartResult({ label, evaluation, result, expected }: PartResultProps) {
@@ -116,7 +108,7 @@ function PartResult({ label, evaluation, result, expected }: PartResultProps) {
   };
 
   const copyResultToClipboard = () => {
-    navigator.clipboard.writeText(result).then(() =>
+    navigator.clipboard.writeText(result ?? "?").then(() =>
       toast(
         <div>
           Copied answer

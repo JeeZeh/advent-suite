@@ -1,4 +1,6 @@
-export default `forward 2
+import { ProblemInput } from "../../../lib/types";
+
+const data = `forward 2
 down 9
 up 6
 forward 1
@@ -998,3 +1000,13 @@ forward 7
 down 3
 down 3
 forward 4`;
+
+export default {
+  name: "Real",
+  data,
+  isReal: true,
+  expected: {
+    partOne: "2070300",
+    partTwo: "2078985210",
+  },
+} as ProblemInput;
