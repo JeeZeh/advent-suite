@@ -17,20 +17,23 @@ export function Header(props: IHeaderProps): JSX.Element {
 
   const updateYear = (newYear: AocYear) => {
     setYear((previousYear: AocYear) => {
-      if (previousYear !== year) {
-        const newDay = getDayOptions(year)[0];
+      if (previousYear !== newYear) {
+        const newDay = getDayOptions(newYear)[0];
         setDay(newDay);
+        setProblem({ year: newYear, day: newDay });
       }
       return newYear;
     });
   };
 
-  useEffect(() => {
-    const newProblem = { year, day };
-    if (problem.year !== newProblem.year || problem.day !== newProblem.day) {
-      setProblem(newProblem);
-    }
-  }, [problem, day, year]);
+  const updateDay = (newDay: AocDay) => {
+    setDay((previousDay: AocDay) => {
+      if (previousDay !== newDay) {
+        setProblem({ year, day: newDay });
+      }
+      return newDay;
+    });
+  };
 
   return (
     <div
@@ -67,7 +70,7 @@ export function Header(props: IHeaderProps): JSX.Element {
           <Label>Year</Label>
           <Select
             sizing="base"
-            onChange={(e) => setYear(e.target.value as AocYear)}
+            onChange={(e) => updateYear(e.target.value as AocYear)}
           >
             {getYearOptions().map((o) => (
               <option key={`option-${o}`} value={o}>
@@ -81,7 +84,7 @@ export function Header(props: IHeaderProps): JSX.Element {
           {/* TODO: Improve typing of value to be explicitly AocYear and AocDay */}
           <Select
             sizing="base"
-            onChange={(e) => setDay(e.target.value as AocDay)}
+            onChange={(e) => updateDay(e.target.value as AocDay)}
           >
             {getDayOptions(problem.year).map((o) => (
               <option key={`option-${o}`} value={o}>

@@ -1,9 +1,6 @@
 import { ResultDisplay } from "./ResultDisplay";
 import classNames, * as cs from "classnames";
 import { ResultProgressBar } from "./ResultProgressBar";
-import { Label, Radio, Select, ToggleSwitch } from "flowbite-react";
-import { ArrowPathIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
 import { ProblemInput, RunResult } from "../lib/types";
 
 interface ResultContainerProps {

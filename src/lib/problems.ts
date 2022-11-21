@@ -25,6 +25,12 @@ export const problemInputs: ProblemInputs = {
       tests: (await import("../problems/2021/02/tests")).default,
     },
   },
+  "2018": {
+    "18": {
+      real: (await import("../problems/2018/18/input")).default,
+      tests: (await import("../problems/2018/18/tests")).default,
+    },
+  },
 };
 
 export function getYearOptions(): AocYear[] {

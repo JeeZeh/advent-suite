@@ -1,16 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Header } from "../components/Header";
-import {
-  getDefaultProblem,
-  getProblemInputs,
-  Problem,
-  ProblemInput,
-} from "../lib/problems";
+import { getDefaultProblem, getProblemInputs } from "../lib/problems";
 
 import { ResultContainer } from "../components/ResultsContainer";
 import InputSelector from "../components/InputSelector";
-import { RunResult, runSolution, toast } from "../lib/utils";
 import classNames from "classnames";
+import { Problem, ProblemInput, RunResult } from "../lib/types";
+import { toast } from "react-toastify";
+import { runSolution } from "../lib/utils";
 
 export function Landing() {
   const [problem, setProblem] = useState<Problem>(getDefaultProblem());
@@ -22,7 +19,11 @@ export function Landing() {
   const [lastRunInputs, setLastRunInputs] = useState<ProblemInput[]>([]);
   const [runOnSave, setRunOnSave] = useState(false);
 
-  const problemInputs = getProblemInputs(problem.year, problem.day);
+  const problemInputs = useMemo(
+    () => getProblemInputs(problem.year, problem.day),
+    [problem]
+  );
+  console.log(problemInputs);
 
   const rerunProblemInputs = useCallback(() => {
     if (runOnSave && lastRunInputs.length > 0) {
