@@ -1,6 +1,6 @@
 import {
   getAggregateEvaluation,
-} from "../lib/inputs";
+} from "../lib/problems";
 import {
   CheckCircleIcon,
   EllipsisHorizontalCircleIcon,

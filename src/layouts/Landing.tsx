@@ -5,7 +5,7 @@ import {
   getProblemInputs,
   Problem,
   ProblemInput,
-} from "../lib/inputs";
+} from "../lib/problems";
 
 import { ResultContainer } from "../components/ResultsContainer";
 import InputSelector from "../components/InputSelector";

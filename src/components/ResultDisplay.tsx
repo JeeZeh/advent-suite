@@ -1,5 +1,5 @@
 import { Spinner, Tooltip } from "flowbite-react";
-import { getAggregateEvaluation } from "../lib/inputs";
+import { getAggregateEvaluation } from "../lib/problems";
 import { ResultIcon } from "./ResultIcon";
 import { useCallback, useEffect, useRef, useState } from "react";
 import classNames from "classnames";

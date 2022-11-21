@@ -1,7 +1,7 @@
 import { DarkThemeToggle, Label, Select } from "flowbite-react";
 
 import classNames from "classnames";
-import { getDayOptions, getYearOptions } from "../lib/inputs";
+import { getDayOptions, getYearOptions } from "../lib/problems";
 import { useEffect, useState } from "react";
 import { AocDay, AocYear, Problem } from "../lib/types";
 

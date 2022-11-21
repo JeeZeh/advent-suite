@@ -1,6 +1,6 @@
 import { ToastContent, ToastOptions } from "react-toastify/dist/types";
 import { Flip, toast as _toast } from "react-toastify";
-import { evaluateRunResult, getAggregateEvaluation } from "./inputs";
+import { evaluateRunResult, getAggregateEvaluation } from "./problems";
 import classNames from "classnames";
 import {
   AggregateEvaluation,
