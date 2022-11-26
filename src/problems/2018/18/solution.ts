@@ -8,7 +8,7 @@ enum Tile {
   Lumber = "#",
 }
 
-type Yard = Map<Point, Tile>;
+type Yard = Map<string, Tile>;
 
 const buildTileFromChar = (c: string): Tile => {
   switch (c) {
@@ -30,7 +30,7 @@ const buildYard = (input: string): [Yard, number, number] => {
 
   for (const [y, row] of input.split("\n").entries()) {
     for (const [x, char] of [...row].entries()) {
-      yard.set(new Point(x, y), buildTileFromChar(char));
+      yard.set(new Point(x, y).toString(), buildTileFromChar(char));
     }
   }
 
@@ -58,15 +58,24 @@ const getNextState = (state: Tile, adjacent: (Tile | undefined)[]): Tile => {
   }
 };
 
-const getAdjacent = (yard: Yard, point: Point): (Tile | undefined)[] => {
-  return Object.values(PointDirections).map((dir) => yard.get(dir));
+const getAdjacent = (yard: Yard, point: Point): Tile[] => {
+  const adjacent: Tile[] = [];
+  for (const dir of Object.values(PointDirections)) {
+    const newPoint = point.add(dir);
+    const check = yard.get(newPoint.toString());
+    if (check) {
+      adjacent.push(check);
+    }
+  }
+  return adjacent;
 };
 
 const tick = (yard: Yard): Yard => {
   const newYard = new Map(yard);
 
   for (const [point, tile] of yard.entries()) {
-    newYard.set(point, getNextState(tile, getAdjacent(yard, point)));
+    const adjacent = getAdjacent(yard, Point.fromString(point));
+    newYard.set(point, getNextState(tile, adjacent));
   }
 
   return newYard;
@@ -77,7 +86,7 @@ const printYard = (yard: Yard, maxX: number, maxY: number) => {
   for (let y = 0; y < maxY; y++) {
     const row = [];
     for (let x = 0; x < maxX; x++) {
-      row.push(yard.get(new Point(x, y)));
+      row.push(yard.get(new Point(x, y).toString()));
     }
     rows.push(row.join(""));
   }
@@ -90,14 +99,63 @@ const getAnswer = (yard: Yard): string => {
   return `${counts[Tile.Tree] * counts[Tile.Lumber]}`;
 };
 
-const run: SolutionRunner = async (input?: string) => {
+const drawFrame = (ctx: CanvasRenderingContext2D, frame: Yard) => {
+  const scale = 5;
+
+  ctx.clearRect(0, 0, 500, 500);
+  for (const [point, tile] of frame.entries()) {
+    const pos = Point.fromString(point);
+    ctx.fillStyle =
+      tile === Tile.Open
+        ? "rgba(0,0,0, 0)"
+        : tile === Tile.Lumber
+        ? "rgb(150,75,0)"
+        : "rgb(0, 225, 0)";
+    ctx.fillRect(pos.x * scale, pos.y * scale, scale, scale);
+  }
+};
+
+const draw = (
+  ctx: CanvasRenderingContext2D,
+  frames: Yard[],
+  durationMs: number,
+  start?: number
+) => {
+  const time = Date.now();
+  const currentMs = start ? time - start : time;
+  const frameNumber = Math.floor(
+    ((currentMs % durationMs) / durationMs) * frames.length
+  );
+
+  const frame = frames[frameNumber];
+  if (frame) {
+    drawFrame(ctx, frame);
+  }
+};
+
+const run: SolutionRunner = async (input, canvas) => {
   if (!input) throw Error("Invalid input");
 
   let [yard, maxX, maxY] = buildYard(input);
 
-  for (let i = 0; i < 10; i++) {
+  let frames: Yard[] = [yard];
+  for (let i = 0; i < 100; i++) {
     yard = tick(yard);
-    printYard(yard, maxX, maxY);
+    frames.push(yard);
+  }
+
+  if (canvas) {
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      if ((window as any).animationInterval) {
+        clearInterval((window as any).animationInterval);
+      }
+      const start = Date.now();
+      (window as any).animationInterval = setInterval(
+        () => draw(ctx, frames, 10000, start),
+        16.6
+      );
+    }
   }
 
   const partOne = getAnswer(yard);

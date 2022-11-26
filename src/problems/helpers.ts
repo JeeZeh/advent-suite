@@ -10,6 +10,15 @@ export class Point {
   add(o: Point): Point {
     return new Point(this.x + o.x, this.y + o.y);
   }
+
+  toString(): string {
+    return `${this.x}#${this.y}`;
+  }
+
+  static fromString(s: string): Point {
+    const [x, y] = s.split("#");
+    return new Point(parseInt(x), parseInt(y));
+  }
 }
 
 export const PointDirections = {

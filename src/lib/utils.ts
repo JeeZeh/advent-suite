@@ -28,13 +28,15 @@ type SolverModule = {
 export async function runSolution(
   year: AocYear,
   day: AocDay,
-  input: ProblemInput
+  input: ProblemInput,
+  canvas?: HTMLCanvasElement | null
 ): Promise<RunResult> {
   const run: SolutionRunner = (
     await import(/* @vite-ignore */ `../problems/${year}/${day}/solution.ts`)
   ).default;
   const start = window.performance.now();
-  const answer = await run(input.data);
+  const answer =
+    canvas != null ? await run(input.data, canvas) : await run(input.data);
   const runtimeMs = window.performance.now() - start;
   const evaluation = evaluateRunResult(answer, input.expected);
   return {

@@ -56,6 +56,6 @@ export default {
   data,
   isReal: true,
   expected: {
-    partOne: "1564",
+    partOne: "456225",
   },
 } as ProblemInput;

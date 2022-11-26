@@ -75,4 +75,4 @@ export type RunResult = {
   aggregateEvaluation: AggregateEvaluation;
 };
 
-export type SolutionRunner = (input?: string) => Promise<Partial<Answer>>;
+export type SolutionRunner = (input?: string, canvas?: HTMLCanvasElement) => Promise<Partial<Answer>>;
