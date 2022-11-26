@@ -23,7 +23,6 @@ export function Landing() {
     () => getProblemInputs(problem.year, problem.day),
     [problem]
   );
-  console.log(problemInputs);
 
   const rerunProblemInputs = useCallback(() => {
     if (runOnSave && lastRunInputs.length > 0) {
