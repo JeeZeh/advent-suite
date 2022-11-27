@@ -50,7 +50,7 @@ export async function runSolution(
 
 export const LONG_RUNTIME_MS = 100;
 
-export function getLocalTheme(): "dark" | "light" {
+export const getLocalTheme = (): "dark" | "light" => {
   const item = localStorage.getItem("theme");
 
   if (item === "dark") {
@@ -58,7 +58,7 @@ export function getLocalTheme(): "dark" | "light" {
   }
 
   return "light";
-}
+};
 
 export const toast = (content: ToastContent, options?: ToastOptions) => {
   const defaultOptions: ToastOptions = {
@@ -76,7 +76,7 @@ export const toast = (content: ToastContent, options?: ToastOptions) => {
  * Given an AggregateEvaluation, returns an appropriate color to be used
  * for the ResultIcon, if useColor is provided.
  */
-export function getEvaluationColor(evaluation: AggregateEvaluation): string {
+export const getEvaluationColor = (evaluation: AggregateEvaluation): string => {
   switch (evaluation) {
     case AggregateEvaluation.AllCorrect:
       return classNames("fill-green-600", "dark:fill-green-400");
@@ -87,4 +87,10 @@ export function getEvaluationColor(evaluation: AggregateEvaluation): string {
     default:
       return "";
   }
-}
+};
+
+export const sleep = async (ms: number) => {
+  return new Promise((res, _) => {
+    setTimeout(() => res(true), ms);
+  });
+};

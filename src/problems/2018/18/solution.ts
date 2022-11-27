@@ -107,10 +107,10 @@ const drawFrame = (ctx: CanvasRenderingContext2D, frame: Yard) => {
     const pos = Point.fromString(point);
     ctx.fillStyle =
       tile === Tile.Open
-        ? "rgba(0,0,0, 0)"
+        ? "rgba(0,0,0,0)"
         : tile === Tile.Lumber
         ? "rgb(150,75,0)"
-        : "rgb(0, 225, 0)";
+        : "rgb(0,225,0)";
     ctx.fillRect(pos.x * scale, pos.y * scale, scale, scale);
   }
 };

@@ -8,11 +8,11 @@ interface ResultContainerProps {
   runResults: Map<string, Promise<RunResult>>;
   setSelectedProblemInput: (input: ProblemInput) => void;
 }
-export function ResultContainer({
+export const ResultContainer = ({
   problemInputs,
   runResults,
   setSelectedProblemInput,
-}: ResultContainerProps) {
+}: ResultContainerProps) => {
   return (
     <div className={cs("flex", "flex-col", "gap-4", "px-2", "py-8")}>
       <div
@@ -23,7 +23,9 @@ export function ResultContainer({
           "items-center"
         )}
       >
-        <h3 className={cs("text-3xl", "dark:text-slate-100")}>Results</h3>
+        <h3 className={cs("text-3xl", "dark:text-slate-100", "font-semibold")}>
+          Results
+        </h3>
       </div>
       <ResultProgressBar runResults={runResults} />
       <div className={cs("flex", "flex-wrap", "gap-6", "justify-center")}>
@@ -40,4 +42,4 @@ export function ResultContainer({
       </div>
     </div>
   );
-}
+};
