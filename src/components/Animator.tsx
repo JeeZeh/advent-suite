@@ -78,8 +78,6 @@ const Animator = ({ runResults }: AnimatorProps) => {
           playerState.animation?.frames.length
             ? playerState.currentFrame
             : 0;
-        console.log(selectedAnimation, startingFrame);
-
         updatePlayingAnimation(selectedAnimation, startingFrame);
       }
     }
