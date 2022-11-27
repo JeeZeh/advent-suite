@@ -110,7 +110,8 @@ const drawFrame = (ctx: CanvasRenderingContext2D, frame: Yard) => {
         ? "rgba(0,0,0,0)"
         : tile === Tile.Lumber
         ? "rgb(150,75,0)"
-        : "rgb(0,225,0)";
+        : "rgb(0,225,200)";
+
     ctx.fillRect(pos.x * scale, pos.y * scale, scale, scale);
   }
 };

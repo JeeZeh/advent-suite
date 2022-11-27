@@ -58,8 +58,6 @@ const Animator = ({ runResults }: AnimatorProps) => {
 
   useEffect(() => {
     if (!selectedAnimation && animations) {
-      console.log("setting default");
-
       const animation = Array.from(animations.keys())[0];
       setSelectedAnimation(animation);
     }
@@ -80,6 +78,8 @@ const Animator = ({ runResults }: AnimatorProps) => {
           playerState.animation?.frames.length
             ? playerState.currentFrame
             : 0;
+        console.log(selectedAnimation, startingFrame);
+
         updatePlayingAnimation(selectedAnimation, startingFrame);
       }
     }
@@ -90,6 +90,7 @@ const Animator = ({ runResults }: AnimatorProps) => {
    * by the passed-in player state.
    */
   const draw = async (playerState: PlayerState) => {
+    const start = window.performance.now();
     if (!playerState) {
       return;
     }
@@ -110,9 +111,8 @@ const Animator = ({ runResults }: AnimatorProps) => {
 
     const context = canvas.current?.getContext("2d");
     if (context) {
-      if (context) {
-        drawCall(context);
-      }
+      drawCall(context);
+      return window.performance.now() - start;
     }
   };
 
@@ -127,7 +127,7 @@ const Animator = ({ runResults }: AnimatorProps) => {
    */
   useEffect(() => {
     // Draw to the canvas once
-    draw(playerState).then(() => {
+    draw(playerState).then((spentRendering) => {
       // Don't call for the next frame if we're not supposed to
       // be playing the animation
       if (!playerState.isPlaying) {
@@ -136,7 +136,7 @@ const Animator = ({ runResults }: AnimatorProps) => {
 
       // If we should draw the next frame, wait so that we
       // adhere to the desired FPS
-      sleep(1000 / playerState.fps).then(() =>
+      sleep(1000 / playerState.fps - (spentRendering ?? 0)).then(() =>
         // Use of callback prevents race conditions between state updates
         setPlayerState((prev) => {
           if (prev.animation) {
@@ -172,9 +172,10 @@ const Animator = ({ runResults }: AnimatorProps) => {
     }
   };
 
-  // So long as the chosen animation is valid, set it as to-be-played
+  // So long as the chosen animation is valid, and not the same as the current animation,
+  // set it as to-be-played.
   useEffect(() => {
-    if (selectedAnimation) {
+    if (selectedAnimation && selectedAnimation !== playerState.animationName) {
       updatePlayingAnimation(selectedAnimation);
     }
   }, [selectedAnimation]);
