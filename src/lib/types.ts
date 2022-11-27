@@ -67,12 +67,24 @@ export enum AggregateEvaluation {
   Incomplete,
 }
 
+export type DrawCall = (ctx: CanvasRenderingContext2D) => void;
+
+export type Animation = {
+  frames: DrawCall[];
+};
+
 export type RunResult = {
   problemInput: ProblemInput;
   answer: Partial<Answer>;
   runtimeMs: number;
   evaluation: [AnswerEval, AnswerEval];
   aggregateEvaluation: AggregateEvaluation;
+  animation?: Animation;
 };
 
-export type SolutionRunner = (input?: string, canvas?: HTMLCanvasElement) => Promise<Partial<Answer>>;
+export type SolutionRunnerResult = {
+  answer: Partial<Answer>;
+  animation?: Animation;
+};
+
+export type SolutionRunner = (input?: string) => Promise<SolutionRunnerResult>;

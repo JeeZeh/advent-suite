@@ -33,7 +33,9 @@ const run: SolutionRunner = async (input?: string) => {
 
   const measurements: number[] = input.split("\n").map((l) => parseInt(l));
 
-  return { partOne: partOne(measurements), partTwo: partTwo(measurements) };
+  return {
+    answer: { partOne: partOne(measurements), partTwo: partTwo(measurements) },
+  };
 };
 
 export default run;

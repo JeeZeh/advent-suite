@@ -63,8 +63,10 @@ const run: SolutionRunner = async (input) => {
   const measurements: Input[] = input.split("\n").map((l) => parseLine(l));
 
   return {
-    partOne: partOne(measurements),
-    partTwo: partTwo(measurements),
+    answer: {
+      partOne: partOne(measurements),
+      partTwo: partTwo(measurements),
+    },
   };
 };
 

@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { Problem, ProblemInput, RunResult } from "../lib/types";
 import { toast } from "react-toastify";
 import { runSolution } from "../lib/utils";
-import Canvas from "../components/Canvas";
+import Animator from "../components/Animator";
 
 export function Landing() {
   const [problem, setProblem] = useState<Problem>(getDefaultProblem());
@@ -19,8 +19,6 @@ export function Landing() {
   );
   const [lastRunInputs, setLastRunInputs] = useState<ProblemInput[]>([]);
   const [runOnSave, setRunOnSave] = useState(false);
-  const [shouldShowCanvas, setShouldShowCanvas] = useState(false);
-  const canvas = useRef<HTMLCanvasElement>(null);
 
   const problemInputs = useMemo(
     () => getProblemInputs(problem.year, problem.day),
@@ -42,7 +40,6 @@ export function Landing() {
   useEffect(() => rerunProblemInputs(), []);
 
   const runProblemInputs = (problemInputs: ProblemInput[]) => {
-    setShouldShowCanvas(false);
     if (problemInputs.length === 0) {
       return;
     }
@@ -50,10 +47,9 @@ export function Landing() {
     const newResults = new Map(runResults);
     if (problemInputs.length === 1) {
       let problemInput = problemInputs[0];
-      setShouldShowCanvas(true);
       newResults.set(
         problemInput.name,
-        runSolution(problem.year, problem.day, problemInput, canvas.current)
+        runSolution(problem.year, problem.day, problemInput)
       );
     }
 
@@ -127,9 +123,7 @@ export function Landing() {
               setSelectedProblemInput={setSelectedProblemInput}
             />
           )}
-          {shouldShowCanvas && (
-            <Canvas canvasRef={canvas} width={400} height={200} />
-          )}
+          <Animator runResults={runResults} />
         </div>
       </div>
     </div>

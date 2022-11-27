@@ -1,4 +1,4 @@
-import { SolutionRunner } from "../../../lib/types";
+import { Animation, DrawCall, SolutionRunner } from "../../../lib/types";
 import { Point, PointDirections } from "../../helpers";
 import _ from "lodash";
 
@@ -115,52 +115,27 @@ const drawFrame = (ctx: CanvasRenderingContext2D, frame: Yard) => {
   }
 };
 
-const draw = (
-  ctx: CanvasRenderingContext2D,
-  frames: Yard[],
-  durationMs: number,
-  start?: number
-) => {
-  const time = Date.now();
-  const currentMs = start ? time - start : time;
-  const frameNumber = Math.floor(
-    ((currentMs % durationMs) / durationMs) * frames.length
-  );
-
-  const frame = frames[frameNumber];
-  if (frame) {
-    drawFrame(ctx, frame);
+const generateAnimation = (states: Yard[]): Animation => {
+  const frames: DrawCall[] = [];
+  for (const state of states) {
+    frames.push((ctx: CanvasRenderingContext2D) => drawFrame(ctx, state));
   }
+  return { frames };
 };
 
-const run: SolutionRunner = async (input, canvas) => {
+const run: SolutionRunner = async (input) => {
   if (!input) throw Error("Invalid input");
 
   let [yard, maxX, maxY] = buildYard(input);
 
-  let frames: Yard[] = [yard];
+  let yardStates: Yard[] = [yard];
   for (let i = 0; i < 100; i++) {
     yard = tick(yard);
-    frames.push(yard);
+    yardStates.push(yard);
   }
-
-  if (canvas) {
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-      if ((window as any).animationInterval) {
-        clearInterval((window as any).animationInterval);
-      }
-      const start = Date.now();
-      (window as any).animationInterval = setInterval(
-        () => draw(ctx, frames, 10000, start),
-        16.6
-      );
-    }
-  }
-
   const partOne = getAnswer(yard);
 
-  return { partOne };
+  return { answer: { partOne }, animation: generateAnimation(yardStates) };
 };
 
 export default run;

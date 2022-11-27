@@ -9,6 +9,7 @@ import {
   ProblemInput,
   RunResult,
   SolutionRunner,
+  SolutionRunnerResult,
 } from "./types";
 
 type SolverModule = {
@@ -28,23 +29,22 @@ type SolverModule = {
 export async function runSolution(
   year: AocYear,
   day: AocDay,
-  input: ProblemInput,
-  canvas?: HTMLCanvasElement | null
+  input: ProblemInput
 ): Promise<RunResult> {
   const run: SolutionRunner = (
     await import(/* @vite-ignore */ `../problems/${year}/${day}/solution.ts`)
   ).default;
   const start = window.performance.now();
-  const answer =
-    canvas != null ? await run(input.data, canvas) : await run(input.data);
+  const runnerResult: SolutionRunnerResult = await run(input.data);
   const runtimeMs = window.performance.now() - start;
-  const evaluation = evaluateRunResult(answer, input.expected);
+  const evaluation = evaluateRunResult(runnerResult.answer, input.expected);
   return {
     problemInput: input,
-    answer,
+    answer: runnerResult.answer,
     runtimeMs,
     evaluation,
     aggregateEvaluation: getAggregateEvaluation(evaluation),
+    animation: runnerResult.animation,
   };
 }
 
