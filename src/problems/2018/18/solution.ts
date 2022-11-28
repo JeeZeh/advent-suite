@@ -110,16 +110,16 @@ const drawFrame = (
     const pos = Point.fromString(point);
     ctx.fillStyle =
       tile === Tile.Open
-        ? "rgba(0,0,0,0)"
+        ? "rgb(0,0,0)"
         : tile === Tile.Lumber
         ? "rgb(150,75,0)"
-        : "rgb(0,225,200)";
+        : "rgb(0,225,0)";
 
     ctx.fillRect(pos.x * scale, pos.y * scale, scale, scale);
   }
   ctx.fillStyle = "rgb(255,255,255)";
   ctx.font = "16px monospace";
-  ctx.fillText(`Tick: ${tick}`, 100, 10);
+  ctx.fillText(`Tick: ${tick}`, 100, 20);
 };
 
 const generateAnimation = (states: [Yard, number][]): Animation => {
