@@ -4,7 +4,7 @@ import { AnimationScrubber } from "./AnimationScrubber";
 import { AnimationSelector } from "./AnimationSelector";
 import { PlayerState } from "./Animator";
 
-const MAX_FPS = 30;
+const MAX_FPS = 60;
 
 interface AnimatorControlsProps {
   animations: Map<string, Animation>;
