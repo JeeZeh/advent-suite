@@ -15,6 +15,12 @@ type ProblemInputs = {
 };
 
 export const problemInputs: ProblemInputs = {
+  "2022": {
+    "01": {
+      real: (await import("../problems/2022/01/input")).default,
+      tests: (await import("../problems/2022/01/tests")).default,
+    },
+  },
   "2021": {
     "01": {
       real: (await import("../problems/2021/01/input")).default,
