@@ -19,14 +19,14 @@ const honestStrategy: PlayerStrategy = {
   Z: 3,
 };
 
-// If you are LHS, you win if your opponent is RHS
+// If you are RHS, you lose if your opponent is LHS
 const LhsWin: { [key in HandValue]: HandValue } = {
   1: 3,
   2: 1,
   3: 2,
 };
 
-// If you are LHS, you lose if your opponent is RHS
+// If you are RHS, you win if your opponent is LHS
 const RhsWin: { [key in HandValue]: HandValue } = {
   1: 2,
   2: 3,
