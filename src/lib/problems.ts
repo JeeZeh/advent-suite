@@ -20,6 +20,10 @@ export const problemInputs: ProblemInputs = {
       real: (await import("../problems/2022/01/input")).default,
       tests: (await import("../problems/2022/01/tests")).default,
     },
+    "02": {
+      real: (await import("../problems/2022/02/input")).default,
+      tests: (await import("../problems/2022/02/tests")).default,
+    },
   },
   "2021": {
     "01": {
