@@ -10,7 +10,7 @@ export default [
     data: providedExample,
     expected: {
       partOne: "15",
-      // partTwo: "-1",
+      partTwo: "12",
     },
   },
 ] as ProblemInput[];
