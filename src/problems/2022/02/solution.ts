@@ -20,7 +20,7 @@ const honestStrategy: PlayerStrategy = {
 };
 
 // If you are RHS, you lose if your opponent is LHS
-const LhsWin: { [key in HandValue]: HandValue } = {
+const RhsLose: { [key in HandValue]: HandValue } = {
   1: 3,
   2: 1,
   3: 2,
@@ -40,9 +40,9 @@ const play = (game: Turn[]): string => {
   let opponent: number = 0;
 
   for (const [oHand, pHand] of game) {
-    if (LhsWin[pHand] === oHand) {
+    if (pHand === RhsWin[oHand]) {
       player += 6;
-    } else if (LhsWin[oHand] === pHand) {
+    } else if (pHand === RhsLose[oHand]) {
       opponent += 6;
     } else {
       player += 3;
@@ -57,7 +57,7 @@ const play = (game: Turn[]): string => {
   return `${player}`;
 };
 
-const determineCorrectHandValue = (
+const determineRiggedRhsValue = (
   opponentHand: keyof OpponentStrategy,
   instruction: keyof PlayerStrategy
 ): Turn => {
@@ -65,7 +65,7 @@ const determineCorrectHandValue = (
   switch (instruction) {
     // Lose
     case "X":
-      return [opponent, LhsWin[opponent]];
+      return [opponent, RhsLose[opponent]];
     // Draw
     case "Y":
       return [opponent, opponent];
@@ -95,7 +95,7 @@ const run: SolutionRunner = async (input) => {
     .split("\n")
     .map((t) => t.split(" "))
     .map(([l, r]) =>
-      determineCorrectHandValue(
+      determineRiggedRhsValue(
         l as keyof OpponentStrategy,
         r as keyof PlayerStrategy
       )
